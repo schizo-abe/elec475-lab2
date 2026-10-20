@@ -1,0 +1,9 @@
+Device: cuda; dataset: cifar10; input: (1, 3, 64, 64); inference: FP32
+Model                       Params M     MACs M    FLOPs M   Latency ms     Images/s
+LeNet                         0.3385       3.59       7.17       0.4709       2123.8
+Modernized LeNet              0.4460       4.59       9.19       0.4634       2157.8
+AlexNet none                  6.6088     218.35     436.70       0.5293       1889.4
+AlexNet LRN                   6.6088     218.35     436.70       1.6486        606.6
+AlexNet BN                    6.6114     218.98     437.97       0.6319       1582.4
+AlexNet BN augmented          6.6114     218.98     437.97       0.6319       1582.4 (same inference model)
+Zoo AlexNet                  57.0448      94.10     188.20       1.7277        578.8

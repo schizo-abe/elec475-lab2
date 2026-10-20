@@ -20,11 +20,20 @@ def main():
                 ("AlexNet BN", "alexnet", "bn"), ("AlexNet BN augmented", "alexnet", "bn"),
                 ("Zoo AlexNet", "zoo_alexnet", "none")]
     results = []
+    measured = {}
     classes = 10 if args.dataset == "cifar10" else 200
     shape = (args.batch_size, 3, 64, 64)
     print(f"Device: {args.device}; dataset: {args.dataset}; input: {shape}; inference: FP32")
     print(f"{'Model':25} {'Params M':>10} {'MACs M':>10} {'FLOPs M':>10} {'Latency ms':>12} {'Images/s':>12}")
     for label, name, norm in variants:
+        if (name, norm) in measured:
+            row = dict(measured[(name, norm)])
+            row["label"] = label
+            row["shared_with"] = measured[(name, norm)]["label"]
+            results.append(row)
+            print(f"{label:25} {row['params_m']:10.4f} {row['macs_m']:10.2f} {row['flops_m']:10.2f} "
+                  f"{row['latency_ms']:12.4f} {row['throughput']:12.1f} (same inference model)", flush=True)
+            continue
         model = get_model(name, num_classes=classes, norm_type=norm).to(args.device)
         profiler = ModelProfiler(model, input_size=shape, device=args.device)
         latency, throughput = benchmark_inference(model, shape, args.device, reps=args.reps, warmup=20)
@@ -32,6 +41,7 @@ def main():
                **profiler.summary(), "latency_ms": latency, "throughput": throughput,
                "reps": args.reps, "warmup": 20, "batch_size": args.batch_size, "precision": "FP32"}
         results.append(row)
+        measured[(name, norm)] = row
         print(f"{label:25} {row['params_m']:10.4f} {row['macs_m']:10.2f} {row['flops_m']:10.2f} "
               f"{latency:12.4f} {throughput:12.1f}", flush=True)
         del model

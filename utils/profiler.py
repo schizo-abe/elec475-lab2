@@ -1,4 +1,5 @@
 import time
+import statistics
 import functools
 from typing import Dict, Tuple, Optional, Any, Callable
 import torch
@@ -52,7 +53,8 @@ class ModelProfiler:
         return total, trainable
 
     def _compute_flops(self) -> Tuple[int, int]:
-
+        original_buffers = {module: set(module._buffers) for module in self.model.modules()}
+        original_mode = self.model.training
         try:
             import thop
             dummy = torch.randn(*self.input_size, device=self.device)
@@ -61,6 +63,12 @@ class ModelProfiler:
             return int(macs), int(2 * macs)
         except Exception:
             pass
+        finally:
+            for module, names in original_buffers.items():
+                for name in ["total_ops", "total_params"]:
+                    if name not in names:
+                        module._buffers.pop(name, None)
+            self.model.train(original_mode)
 
 
         total_macs = 0
@@ -188,7 +196,7 @@ def benchmark_inference(
             timings.append((t1 - t0) * 1000.0)
 
     timings.sort()
-    median_latency_ms = timings[len(timings) // 2]
+    median_latency_ms = statistics.median(timings)
     throughput = (batch_size / (median_latency_ms / 1000.0))
     return median_latency_ms, throughput
 

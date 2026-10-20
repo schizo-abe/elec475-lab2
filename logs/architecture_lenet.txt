@@ -1,0 +1,30 @@
+<frozen runpy>:128: RuntimeWarning: 'models.lenet' found in sys.modules after import of package 'models', but prior to execution of 'models.lenet'; this may result in unpredictable behaviour
+Testing LeNet-5 Architecture:
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+LeNet5                                   [1, 10]                   --
+├─Sequential: 1-1                        [1, 16, 13, 13]           --
+│    └─Conv2d: 2-1                       [1, 6, 60, 60]            456
+│    └─Tanh: 2-2                         [1, 6, 60, 60]            --
+│    └─AvgPool2d: 2-3                    [1, 6, 30, 30]            --
+│    └─Conv2d: 2-4                       [1, 16, 26, 26]           2,416
+│    └─Tanh: 2-5                         [1, 16, 26, 26]           --
+│    └─AvgPool2d: 2-6                    [1, 16, 13, 13]           --
+├─Sequential: 1-2                        [1, 10]                   --
+│    └─Linear: 2-7                       [1, 120]                  324,600
+│    └─Tanh: 2-8                         [1, 120]                  --
+│    └─Linear: 2-9                       [1, 84]                   10,164
+│    └─Tanh: 2-10                        [1, 84]                   --
+│    └─Linear: 2-11                      [1, 10]                   850
+==========================================================================================
+Total params: 338,486
+Trainable params: 338,486
+Non-trainable params: 0
+Total mult-adds (Units.MEGABYTES): 3.61
+==========================================================================================
+Input size (MB): 0.05
+Forward/backward pass size (MB): 0.26
+Params size (MB): 1.35
+Estimated Total Size (MB): 1.66
+==========================================================================================

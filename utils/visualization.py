@@ -66,3 +66,13 @@ def plot_ablation_summary(
     plt.savefig(save_path, dpi=200)
     plt.close()
     print(f"Master ablation summary plot saved to: {save_path}")
+
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--plot-ablation", action="store_true")
+    args = parser.parse_args()
+    if args.plot_ablation:
+        from prepare_results import main
+        main()

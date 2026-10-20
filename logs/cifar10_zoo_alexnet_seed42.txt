@@ -1,0 +1,27 @@
+$ python train.py --model zoo_alexnet --norm none --dataset cifar10 --epochs 10 --lr 0.001 --seed 42 --amp --save-model checkpoints/cifar10_zoo_alexnet_seed42.pth --plot-file plots/cifar10_zoo_alexnet_seed42.png --results-file results/cifar10_zoo_alexnet_seed42.json --no-augment
+{"model": "zoo_alexnet", "norm": "none", "dataset": "cifar10", "data_dir": "./data", "epochs": 10, "batch_size": 128, "lr": 0.001, "weight_decay": 0.0001, "seed": 42, "workers": 4, "no_augment": true, "amp": true, "pretrained": false, "early_stopping": false, "patience": 5, "min_delta": 0.0001, "save_model": "checkpoints/cifar10_zoo_alexnet_seed42.pth", "plot_file": "plots/cifar10_zoo_alexnet_seed42.png", "results_file": "results/cifar10_zoo_alexnet_seed42.json"}
+Device: cuda; GPU: NVIDIA GeForce RTX 5070 Laptop GPU
+============================================================
+Computational Complexity Profile: zoo_alexnet
+Input Tensor Shape   : (1, 3, 64, 64)
+------------------------------------------------------------
+Total Parameters     : 57,044,810 (57.0448 M)
+Trainable Parameters : 57,044,810
+Multiply-Accumulates : 94,099,392 (94.10 MMACs)
+Floating Point Ops   : 188,198,784 (188.20 MFLOPs)
+Weight Size (FP32)   : 217.61 MB
+============================================================
+Train: 50000; validation: 10000; classes: 10
+Epoch | Train loss | Train acc | Val loss | Val acc | Macro F1 | Seconds
+  1 | 1.9308 | 23.57 | 1.6527 | 35.68 | 31.93 | 15.70
+  2 | 1.5104 | 43.25 | 1.4061 | 48.94 | 48.04 | 12.12
+  3 | 1.3373 | 52.05 | 1.2375 | 55.86 | 54.99 | 12.52
+  4 | 1.2252 | 56.57 | 1.1785 | 57.29 | 57.16 | 11.99
+  5 | 1.1426 | 60.04 | 1.1898 | 58.91 | 57.76 | 11.53
+  6 | 1.0910 | 61.55 | 1.0977 | 61.49 | 61.17 | 11.45
+  7 | 1.0393 | 63.86 | 1.1385 | 60.58 | 59.55 | 11.38
+  8 | 0.9986 | 65.40 | 1.1475 | 61.74 | 60.85 | 11.24
+  9 | 0.9622 | 66.51 | 1.0441 | 64.70 | 64.11 | 10.83
+ 10 | 0.9262 | 68.16 | 1.0437 | 64.36 | 64.22 | 11.26
+Training curves successfully saved to: plots/cifar10_zoo_alexnet_seed42.png
+Selected epoch 10; train 70.54%; validation 64.36%; Macro F1 64.22%; gap 6.18 pp

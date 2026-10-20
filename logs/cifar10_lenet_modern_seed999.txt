@@ -1,0 +1,22 @@
+$ python train.py --model lenet_modern --norm none --dataset cifar10 --epochs 5 --lr 0.001 --seed 999 --amp --save-model checkpoints/cifar10_lenet_modern_seed999.pth --plot-file plots/cifar10_lenet_modern_seed999.png --results-file results/cifar10_lenet_modern_seed999.json --no-augment
+{"model": "lenet_modern", "norm": "none", "dataset": "cifar10", "data_dir": "./data", "epochs": 5, "batch_size": 128, "lr": 0.001, "weight_decay": 0.0001, "seed": 999, "workers": 4, "no_augment": true, "amp": true, "pretrained": false, "early_stopping": false, "patience": 5, "min_delta": 0.0001, "save_model": "checkpoints/cifar10_lenet_modern_seed999.pth", "plot_file": "plots/cifar10_lenet_modern_seed999.png", "results_file": "results/cifar10_lenet_modern_seed999.json"}
+Device: cuda; GPU: NVIDIA GeForce RTX 5070 Laptop GPU
+============================================================
+Computational Complexity Profile: lenet_modern
+Input Tensor Shape   : (1, 3, 64, 64)
+------------------------------------------------------------
+Total Parameters     : 446,006 (0.4460 M)
+Trainable Parameters : 446,006
+Multiply-Accumulates : 4,592,520 (4.59 MMACs)
+Floating Point Ops   : 9,185,040 (9.19 MFLOPs)
+Weight Size (FP32)   : 1.70 MB
+============================================================
+Train: 50000; validation: 10000; classes: 10
+Epoch | Train loss | Train acc | Val loss | Val acc | Macro F1 | Seconds
+  1 | 1.5321 | 44.46 | 1.2850 | 53.62 | 52.77 | 6.56
+  2 | 1.1949 | 57.56 | 1.1410 | 59.58 | 59.26 | 2.87
+  3 | 1.0592 | 62.36 | 1.0543 | 63.12 | 62.47 | 2.71
+  4 | 0.9665 | 66.01 | 1.0347 | 63.76 | 63.27 | 2.79
+  5 | 0.8822 | 68.93 | 1.0194 | 64.92 | 64.99 | 2.76
+Training curves successfully saved to: plots/cifar10_lenet_modern_seed999.png
+Selected epoch 5; train 72.04%; validation 64.92%; Macro F1 64.99%; gap 7.12 pp

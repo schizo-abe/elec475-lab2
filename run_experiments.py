@@ -37,7 +37,7 @@ def main():
             command.append("--no-augment")
         commands.append(" ".join(["python", *command[1:]]))
         Path("commands.txt").write_text("\n".join(commands) + "\n")
-        if Path(f"results/{key}.json").exists():
+        if Path(f"results/{key}.json").exists() and Path(f"checkpoints/{key}.pth").exists():
             print(f"[{index}/{len(jobs)}] Already completed {key}", flush=True)
             continue
         print(f"[{index}/{len(jobs)}] Starting {key}", flush=True)

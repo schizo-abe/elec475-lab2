@@ -1,0 +1,778 @@
+{
+  "lenet": [
+    {
+      "name": "feature_extractor.0",
+      "type": "Conv2d",
+      "output": [
+        6,
+        60,
+        60
+      ],
+      "parameters": 456,
+      "receptive_field": 5,
+      "jump": 1
+    },
+    {
+      "name": "feature_extractor.1",
+      "type": "Tanh",
+      "output": [
+        6,
+        60,
+        60
+      ],
+      "parameters": 0,
+      "receptive_field": 5,
+      "jump": 1
+    },
+    {
+      "name": "feature_extractor.2",
+      "type": "AvgPool2d",
+      "output": [
+        6,
+        30,
+        30
+      ],
+      "parameters": 0,
+      "receptive_field": 6,
+      "jump": 2
+    },
+    {
+      "name": "feature_extractor.3",
+      "type": "Conv2d",
+      "output": [
+        16,
+        26,
+        26
+      ],
+      "parameters": 2416,
+      "receptive_field": 14,
+      "jump": 2
+    },
+    {
+      "name": "feature_extractor.4",
+      "type": "Tanh",
+      "output": [
+        16,
+        26,
+        26
+      ],
+      "parameters": 0,
+      "receptive_field": 14,
+      "jump": 2
+    },
+    {
+      "name": "feature_extractor.5",
+      "type": "AvgPool2d",
+      "output": [
+        16,
+        13,
+        13
+      ],
+      "parameters": 0,
+      "receptive_field": 16,
+      "jump": 4
+    },
+    {
+      "name": "classifier.0",
+      "type": "Linear",
+      "output": [
+        120
+      ],
+      "parameters": 324600,
+      "receptive_field": 16,
+      "jump": 4
+    },
+    {
+      "name": "classifier.1",
+      "type": "Tanh",
+      "output": [
+        120
+      ],
+      "parameters": 0,
+      "receptive_field": 16,
+      "jump": 4
+    },
+    {
+      "name": "classifier.2",
+      "type": "Linear",
+      "output": [
+        84
+      ],
+      "parameters": 10164,
+      "receptive_field": 16,
+      "jump": 4
+    },
+    {
+      "name": "classifier.3",
+      "type": "Tanh",
+      "output": [
+        84
+      ],
+      "parameters": 0,
+      "receptive_field": 16,
+      "jump": 4
+    },
+    {
+      "name": "classifier.4",
+      "type": "Linear",
+      "output": [
+        10
+      ],
+      "parameters": 850,
+      "receptive_field": 16,
+      "jump": 4
+    }
+  ],
+  "lenet_modern": [
+    {
+      "name": "feature_extractor.0",
+      "type": "Conv2d",
+      "output": [
+        6,
+        64,
+        64
+      ],
+      "parameters": 456,
+      "receptive_field": 5,
+      "jump": 1
+    },
+    {
+      "name": "feature_extractor.1",
+      "type": "ReLU",
+      "output": [
+        6,
+        64,
+        64
+      ],
+      "parameters": 0,
+      "receptive_field": 5,
+      "jump": 1
+    },
+    {
+      "name": "feature_extractor.2",
+      "type": "MaxPool2d",
+      "output": [
+        6,
+        31,
+        31
+      ],
+      "parameters": 0,
+      "receptive_field": 7,
+      "jump": 2
+    },
+    {
+      "name": "feature_extractor.3",
+      "type": "Conv2d",
+      "output": [
+        16,
+        31,
+        31
+      ],
+      "parameters": 2416,
+      "receptive_field": 15,
+      "jump": 2
+    },
+    {
+      "name": "feature_extractor.4",
+      "type": "ReLU",
+      "output": [
+        16,
+        31,
+        31
+      ],
+      "parameters": 0,
+      "receptive_field": 15,
+      "jump": 2
+    },
+    {
+      "name": "feature_extractor.5",
+      "type": "MaxPool2d",
+      "output": [
+        16,
+        15,
+        15
+      ],
+      "parameters": 0,
+      "receptive_field": 19,
+      "jump": 4
+    },
+    {
+      "name": "classifier.0",
+      "type": "Linear",
+      "output": [
+        120
+      ],
+      "parameters": 432120,
+      "receptive_field": 19,
+      "jump": 4
+    },
+    {
+      "name": "classifier.1",
+      "type": "ReLU",
+      "output": [
+        120
+      ],
+      "parameters": 0,
+      "receptive_field": 19,
+      "jump": 4
+    },
+    {
+      "name": "classifier.2",
+      "type": "Linear",
+      "output": [
+        84
+      ],
+      "parameters": 10164,
+      "receptive_field": 19,
+      "jump": 4
+    },
+    {
+      "name": "classifier.3",
+      "type": "ReLU",
+      "output": [
+        84
+      ],
+      "parameters": 0,
+      "receptive_field": 19,
+      "jump": 4
+    },
+    {
+      "name": "classifier.4",
+      "type": "Linear",
+      "output": [
+        10
+      ],
+      "parameters": 850,
+      "receptive_field": 19,
+      "jump": 4
+    }
+  ],
+  "alexnet": [
+    {
+      "name": "features.0",
+      "type": "Conv2d",
+      "output": [
+        64,
+        32,
+        32
+      ],
+      "parameters": 4864,
+      "receptive_field": 5,
+      "jump": 2
+    },
+    {
+      "name": "features.1",
+      "type": "BatchNorm2d",
+      "output": [
+        64,
+        32,
+        32
+      ],
+      "parameters": 128,
+      "receptive_field": 5,
+      "jump": 2
+    },
+    {
+      "name": "features.2",
+      "type": "ReLU",
+      "output": [
+        64,
+        32,
+        32
+      ],
+      "parameters": 0,
+      "receptive_field": 5,
+      "jump": 2
+    },
+    {
+      "name": "features.3",
+      "type": "MaxPool2d",
+      "output": [
+        64,
+        15,
+        15
+      ],
+      "parameters": 0,
+      "receptive_field": 9,
+      "jump": 4
+    },
+    {
+      "name": "features.4",
+      "type": "Conv2d",
+      "output": [
+        192,
+        15,
+        15
+      ],
+      "parameters": 307392,
+      "receptive_field": 25,
+      "jump": 4
+    },
+    {
+      "name": "features.5",
+      "type": "BatchNorm2d",
+      "output": [
+        192,
+        15,
+        15
+      ],
+      "parameters": 384,
+      "receptive_field": 25,
+      "jump": 4
+    },
+    {
+      "name": "features.6",
+      "type": "ReLU",
+      "output": [
+        192,
+        15,
+        15
+      ],
+      "parameters": 0,
+      "receptive_field": 25,
+      "jump": 4
+    },
+    {
+      "name": "features.7",
+      "type": "MaxPool2d",
+      "output": [
+        192,
+        7,
+        7
+      ],
+      "parameters": 0,
+      "receptive_field": 33,
+      "jump": 8
+    },
+    {
+      "name": "features.8",
+      "type": "Conv2d",
+      "output": [
+        384,
+        7,
+        7
+      ],
+      "parameters": 663936,
+      "receptive_field": 49,
+      "jump": 8
+    },
+    {
+      "name": "features.9",
+      "type": "BatchNorm2d",
+      "output": [
+        384,
+        7,
+        7
+      ],
+      "parameters": 768,
+      "receptive_field": 49,
+      "jump": 8
+    },
+    {
+      "name": "features.10",
+      "type": "ReLU",
+      "output": [
+        384,
+        7,
+        7
+      ],
+      "parameters": 0,
+      "receptive_field": 49,
+      "jump": 8
+    },
+    {
+      "name": "features.11",
+      "type": "Conv2d",
+      "output": [
+        384,
+        7,
+        7
+      ],
+      "parameters": 1327488,
+      "receptive_field": 65,
+      "jump": 8
+    },
+    {
+      "name": "features.12",
+      "type": "BatchNorm2d",
+      "output": [
+        384,
+        7,
+        7
+      ],
+      "parameters": 768,
+      "receptive_field": 65,
+      "jump": 8
+    },
+    {
+      "name": "features.13",
+      "type": "ReLU",
+      "output": [
+        384,
+        7,
+        7
+      ],
+      "parameters": 0,
+      "receptive_field": 65,
+      "jump": 8
+    },
+    {
+      "name": "features.14",
+      "type": "Conv2d",
+      "output": [
+        256,
+        7,
+        7
+      ],
+      "parameters": 884992,
+      "receptive_field": 81,
+      "jump": 8
+    },
+    {
+      "name": "features.15",
+      "type": "BatchNorm2d",
+      "output": [
+        256,
+        7,
+        7
+      ],
+      "parameters": 512,
+      "receptive_field": 81,
+      "jump": 8
+    },
+    {
+      "name": "features.16",
+      "type": "ReLU",
+      "output": [
+        256,
+        7,
+        7
+      ],
+      "parameters": 0,
+      "receptive_field": 81,
+      "jump": 8
+    },
+    {
+      "name": "features.17",
+      "type": "MaxPool2d",
+      "output": [
+        256,
+        3,
+        3
+      ],
+      "parameters": 0,
+      "receptive_field": 97,
+      "jump": 16
+    },
+    {
+      "name": "classifier.0",
+      "type": "Dropout",
+      "output": [
+        2304
+      ],
+      "parameters": 0,
+      "receptive_field": 97,
+      "jump": 16
+    },
+    {
+      "name": "classifier.1",
+      "type": "Linear",
+      "output": [
+        1024
+      ],
+      "parameters": 2360320,
+      "receptive_field": 97,
+      "jump": 16
+    },
+    {
+      "name": "classifier.2",
+      "type": "ReLU",
+      "output": [
+        1024
+      ],
+      "parameters": 0,
+      "receptive_field": 97,
+      "jump": 16
+    },
+    {
+      "name": "classifier.3",
+      "type": "Dropout",
+      "output": [
+        1024
+      ],
+      "parameters": 0,
+      "receptive_field": 97,
+      "jump": 16
+    },
+    {
+      "name": "classifier.4",
+      "type": "Linear",
+      "output": [
+        1024
+      ],
+      "parameters": 1049600,
+      "receptive_field": 97,
+      "jump": 16
+    },
+    {
+      "name": "classifier.5",
+      "type": "ReLU",
+      "output": [
+        1024
+      ],
+      "parameters": 0,
+      "receptive_field": 97,
+      "jump": 16
+    },
+    {
+      "name": "classifier.6",
+      "type": "Linear",
+      "output": [
+        10
+      ],
+      "parameters": 10250,
+      "receptive_field": 97,
+      "jump": 16
+    }
+  ],
+  "zoo_alexnet": [
+    {
+      "name": "features.0",
+      "type": "Conv2d",
+      "output": [
+        64,
+        15,
+        15
+      ],
+      "parameters": 23296,
+      "receptive_field": 11,
+      "jump": 4
+    },
+    {
+      "name": "features.1",
+      "type": "ReLU",
+      "output": [
+        64,
+        15,
+        15
+      ],
+      "parameters": 0,
+      "receptive_field": 11,
+      "jump": 4
+    },
+    {
+      "name": "features.2",
+      "type": "MaxPool2d",
+      "output": [
+        64,
+        7,
+        7
+      ],
+      "parameters": 0,
+      "receptive_field": 19,
+      "jump": 8
+    },
+    {
+      "name": "features.3",
+      "type": "Conv2d",
+      "output": [
+        192,
+        7,
+        7
+      ],
+      "parameters": 307392,
+      "receptive_field": 51,
+      "jump": 8
+    },
+    {
+      "name": "features.4",
+      "type": "ReLU",
+      "output": [
+        192,
+        7,
+        7
+      ],
+      "parameters": 0,
+      "receptive_field": 51,
+      "jump": 8
+    },
+    {
+      "name": "features.5",
+      "type": "MaxPool2d",
+      "output": [
+        192,
+        3,
+        3
+      ],
+      "parameters": 0,
+      "receptive_field": 67,
+      "jump": 16
+    },
+    {
+      "name": "features.6",
+      "type": "Conv2d",
+      "output": [
+        384,
+        3,
+        3
+      ],
+      "parameters": 663936,
+      "receptive_field": 99,
+      "jump": 16
+    },
+    {
+      "name": "features.7",
+      "type": "ReLU",
+      "output": [
+        384,
+        3,
+        3
+      ],
+      "parameters": 0,
+      "receptive_field": 99,
+      "jump": 16
+    },
+    {
+      "name": "features.8",
+      "type": "Conv2d",
+      "output": [
+        256,
+        3,
+        3
+      ],
+      "parameters": 884992,
+      "receptive_field": 131,
+      "jump": 16
+    },
+    {
+      "name": "features.9",
+      "type": "ReLU",
+      "output": [
+        256,
+        3,
+        3
+      ],
+      "parameters": 0,
+      "receptive_field": 131,
+      "jump": 16
+    },
+    {
+      "name": "features.10",
+      "type": "Conv2d",
+      "output": [
+        256,
+        3,
+        3
+      ],
+      "parameters": 590080,
+      "receptive_field": 163,
+      "jump": 16
+    },
+    {
+      "name": "features.11",
+      "type": "ReLU",
+      "output": [
+        256,
+        3,
+        3
+      ],
+      "parameters": 0,
+      "receptive_field": 163,
+      "jump": 16
+    },
+    {
+      "name": "features.12",
+      "type": "MaxPool2d",
+      "output": [
+        256,
+        1,
+        1
+      ],
+      "parameters": 0,
+      "receptive_field": 195,
+      "jump": 32
+    },
+    {
+      "name": "avgpool",
+      "type": "AdaptiveAvgPool2d",
+      "output": [
+        256,
+        6,
+        6
+      ],
+      "parameters": 0,
+      "receptive_field": 195,
+      "jump": 32
+    },
+    {
+      "name": "classifier.0",
+      "type": "Dropout",
+      "output": [
+        9216
+      ],
+      "parameters": 0,
+      "receptive_field": 195,
+      "jump": 32
+    },
+    {
+      "name": "classifier.1",
+      "type": "Linear",
+      "output": [
+        4096
+      ],
+      "parameters": 37752832,
+      "receptive_field": 195,
+      "jump": 32
+    },
+    {
+      "name": "classifier.2",
+      "type": "ReLU",
+      "output": [
+        4096
+      ],
+      "parameters": 0,
+      "receptive_field": 195,
+      "jump": 32
+    },
+    {
+      "name": "classifier.3",
+      "type": "Dropout",
+      "output": [
+        4096
+      ],
+      "parameters": 0,
+      "receptive_field": 195,
+      "jump": 32
+    },
+    {
+      "name": "classifier.4",
+      "type": "Linear",
+      "output": [
+        4096
+      ],
+      "parameters": 16781312,
+      "receptive_field": 195,
+      "jump": 32
+    },
+    {
+      "name": "classifier.5",
+      "type": "ReLU",
+      "output": [
+        4096
+      ],
+      "parameters": 0,
+      "receptive_field": 195,
+      "jump": 32
+    },
+    {
+      "name": "classifier.6",
+      "type": "Linear",
+      "output": [
+        10
+      ],
+      "parameters": 40970,
+      "receptive_field": 195,
+      "jump": 32
+    }
+  ]
+}

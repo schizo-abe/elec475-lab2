@@ -1,0 +1,22 @@
+$ python train.py --model lenet --norm none --dataset tiny_imagenet --epochs 5 --lr 0.001 --seed 42 --amp --save-model checkpoints/tiny_imagenet_lenet_seed42.pth --plot-file plots/tiny_imagenet_lenet_seed42.png --results-file results/tiny_imagenet_lenet_seed42.json --no-augment
+{"model": "lenet", "norm": "none", "dataset": "tiny_imagenet", "data_dir": "./data", "epochs": 5, "batch_size": 128, "lr": 0.001, "weight_decay": 0.0001, "seed": 42, "workers": 4, "no_augment": true, "amp": true, "pretrained": false, "early_stopping": false, "patience": 5, "min_delta": 0.0001, "save_model": "checkpoints/tiny_imagenet_lenet_seed42.pth", "plot_file": "plots/tiny_imagenet_lenet_seed42.png", "results_file": "results/tiny_imagenet_lenet_seed42.json"}
+Device: cuda; GPU: NVIDIA GeForce RTX 5070 Laptop GPU
+============================================================
+Computational Complexity Profile: lenet
+Input Tensor Shape   : (1, 3, 64, 64)
+------------------------------------------------------------
+Total Parameters     : 354,636 (0.3546 M)
+Trainable Parameters : 354,636
+Multiply-Accumulates : 3,601,864 (3.60 MMACs)
+Floating Point Ops   : 7,203,728 (7.20 MFLOPs)
+Weight Size (FP32)   : 1.35 MB
+============================================================
+Train: 100000; validation: 10000; classes: 200
+Epoch | Train loss | Train acc | Val loss | Val acc | Macro F1 | Seconds
+  1 | 4.8096 | 5.09 | 4.6385 | 5.95 | 3.73 | 9.76
+  2 | 4.5553 | 7.74 | 4.5279 | 8.29 | 5.91 | 6.59
+  3 | 4.4295 | 9.04 | 4.4297 | 9.18 | 6.95 | 6.40
+  4 | 4.3352 | 10.42 | 4.3811 | 9.36 | 7.24 | 6.41
+  5 | 4.2491 | 11.40 | 4.3252 | 10.62 | 8.64 | 6.42
+Training curves successfully saved to: plots/tiny_imagenet_lenet_seed42.png
+Selected epoch 5; train 12.67%; validation 10.62%; Macro F1 8.64%; gap 2.05 pp

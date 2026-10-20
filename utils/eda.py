@@ -8,7 +8,13 @@ from torchvision.datasets import CIFAR10, ImageFolder
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 
-from .dataset import CIFAR10_CLASSES, download_and_extract_tiny_imagenet
+if __package__:
+    from .dataset import CIFAR10_CLASSES, download_and_extract_tiny_imagenet
+else:
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from utils.dataset import CIFAR10_CLASSES, download_and_extract_tiny_imagenet
 
 
 def get_dir_size_mb(path: str) -> float:
