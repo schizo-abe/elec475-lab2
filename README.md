@@ -28,7 +28,7 @@ python compare_models.py --dataset tiny_imagenet --device cuda --output results/
 
 The queue contains 54 runs: seven required configurations plus a 15-epoch unaugmented BatchNorm comparison on both datasets, each with seeds 42, 123 and 999, and two additional CIFAR-10 learning rates with the same seeds. LeNet runs for 5 epochs, normalization and zoo models for 10, and the matched augmentation comparison for 15. The main learning rate is 0.001, batch size is 128 and Adam weight decay is 0.0001. Training uses CUDA bfloat16 autocast with FP32 weights when --amp is enabled. Each checkpoint is selected by validation loss. The core queue uses fixed epoch budgets; --early-stopping and --patience are available for separate experiments.
 
-The queue skips runs whose result JSON already exists. Delete a chosen result JSON before rerunning that experiment. The commands.txt file contains every exact training command. Raw logs, complete epoch histories and summary tables are in logs/ and results/. Figures are in plots/.
+The queue skips a run only when both its result JSON and its checkpoint exist. A clone without checkpoints trains the models again. Delete a chosen result JSON to force that experiment to rerun. The commands.txt file contains every exact training command. Raw logs, complete epoch histories and summary tables are in logs/ and results/. Figures are in plots/.
 
 The Tiny ImageNet loader uses val/val_annotations.txt and val/images, with labels aligned to the training class order. It does not evaluate on the training directory. CIFAR-10 uses its official test split as validation, following the lab template, so those reported numbers are validation benchmarks rather than untouched test estimates.
 

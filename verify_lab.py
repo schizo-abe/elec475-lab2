@@ -4,7 +4,7 @@ import torch
 from torch import nn
 from models import get_model
 from utils.dataset import get_datasets
-from utils.metrics import ConfusionMatrixTracker
+from utils.metrics import ConfusionMatrixTracker, EarlyStopping
 
 
 def main():
@@ -34,10 +34,20 @@ def main():
     metrics = tracker.compute_metrics()
     assert abs(metrics["top1_accuracy"] - 50) < 1e-6
     assert abs(metrics["macro_f1"] - 50) < 1e-6
+    stopper_model = nn.Linear(2, 2)
+    stopper = EarlyStopping(patience=2, mode="min", verbose=False)
+    original = {key: value.clone() for key, value in stopper_model.state_dict().items()}
+    assert not stopper.step(1.0, stopper_model)
+    with torch.no_grad():
+        stopper_model.weight.add_(1)
+    assert not stopper.step(1.1, stopper_model)
+    assert stopper.step(1.2, stopper_model)
+    stopper.restore_best_weights(stopper_model)
+    assert all(torch.equal(stopper_model.state_dict()[key], value) for key, value in original.items())
     Path("results/verification.json").write_text(json.dumps({"models": records,
         "tiny_validation": {"train": len(train), "validation": len(val), "classes": len(classes),
                             "validation_per_class": 50, "paths_disjoint": True},
-        "metric_fixture": "passed"}, indent=2))
+        "metric_fixture": "passed", "early_stopping_restore": "passed"}, indent=2))
     print("All architecture, gradient, split and metric checks passed.")
 
 

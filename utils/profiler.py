@@ -1,4 +1,5 @@
 import time
+import statistics
 import functools
 from typing import Dict, Tuple, Optional, Any, Callable
 import torch
@@ -188,7 +189,7 @@ def benchmark_inference(
             timings.append((t1 - t0) * 1000.0)
 
     timings.sort()
-    median_latency_ms = timings[len(timings) // 2]
+    median_latency_ms = statistics.median(timings)
     throughput = (batch_size / (median_latency_ms / 1000.0))
     return median_latency_ms, throughput
 
