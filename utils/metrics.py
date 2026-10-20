@@ -1,12 +1,3 @@
-"""
-ELEC 475: Lab 2 - Performance Metrics, Classification Evaluation & Early Stopping
-Provides:
-  1. AverageMeter: Running arithmetic mean accumulator.
-  2. compute_accuracy: Top-k classification accuracy calculation.
-  3. ConfusionMatrixTracker: Confusion matrix, per-class metrics (TP/FP/FN/TN, Precision, Recall, Specificity, F1),
-     and global aggregations (Macro F1, Micro F1, Weighted F1).
-  4. EarlyStopping: Metric-driven training termination with patience, min_delta, and model restoration.
-"""
 import os
 import math
 from typing import List, Dict, Tuple, Optional, Any
@@ -15,9 +6,8 @@ import torch.nn as nn
 
 
 class AverageMeter:
-    """
-    Computes and stores the running average, sum, and current value.
-    """
+
+
     def __init__(self, name: str = ""):
         self.name = name
         self.reset()
@@ -36,9 +26,8 @@ class AverageMeter:
 
 
 def compute_accuracy(output: torch.Tensor, target: torch.Tensor, topk: Tuple[int, ...] = (1,)) -> List[float]:
-    """
-    Computes precision@k (Top-k accuracy) for the specified values of k.
-    """
+
+
     with torch.no_grad():
         maxk = max(topk)
         batch_size = target.size(0)
@@ -55,16 +44,8 @@ def compute_accuracy(output: torch.Tensor, target: torch.Tensor, topk: Tuple[int
 
 
 class ConfusionMatrixTracker:
-    """
-    Tracks and computes a confusion matrix across multiple batches,
-    generating per-class Precision, Recall, Specificity, F1-scores,
-    as well as Macro, Micro, and Weighted F1 aggregations.
 
-    Confusion Matrix Layout:
-      Rows: Ground Truth Classes
-      Columns: Predicted Classes
-      Element (r, c): Number of samples with true class r predicted as class c.
-    """
+
     def __init__(self, num_classes: int, class_names: Optional[List[str]] = None):
         self.num_classes = num_classes
         self.class_names = class_names if class_names is not None else [f"Class_{i}" for i in range(num_classes)]
@@ -75,36 +56,22 @@ class ConfusionMatrixTracker:
         self.total_samples = 0
 
     def update(self, preds: torch.Tensor, targets: torch.Tensor):
-        """
-        Updates confusion matrix with predictions and ground truth targets.
-        Args:
-            preds: Tensor of predicted class indices (B,) or logits (B, C).
-            targets: Tensor of ground truth class indices (B,).
-        """
+
+
         with torch.no_grad():
             if preds.dim() > 1:
                 preds = torch.argmax(preds, dim=1)
             preds = preds.view(-1).cpu()
             targets = targets.view(-1).cpu()
 
-            for t, p in zip(targets, preds):
-                t_idx = int(t.item()) if hasattr(t, "item") else int(t)
-                p_idx = int(p.item()) if hasattr(p, "item") else int(p)
-                if 0 <= t_idx < self.num_classes and 0 <= p_idx < self.num_classes:
-                    self.matrix[t_idx, p_idx] += 1
-                    self.total_samples += 1
+            valid = (targets >= 0) & (targets < self.num_classes) & (preds >= 0) & (preds < self.num_classes)
+            indexes = targets[valid] * self.num_classes + preds[valid]
+            self.matrix += torch.bincount(indexes, minlength=self.num_classes ** 2).reshape(self.num_classes, self.num_classes)
+            self.total_samples += int(valid.sum())
 
     def compute_metrics(self) -> Dict[str, Any]:
-        """
-        Calculates comprehensive classification metrics from the accumulated confusion matrix.
-        Returns:
-            Dictionary containing:
-              - per_class: Dict with TP, FP, FN, TN, precision, recall, specificity, f1, support
-              - top1_accuracy: Global classification accuracy (%)
-              - macro_precision, macro_recall, macro_f1: Unweighted averages (%)
-              - micro_precision, micro_recall, micro_f1: Globally pooled metrics (%)
-              - weighted_f1: Prevalence-weighted F1 (%)
-        """
+
+
         mat = self.matrix.float()
         total = self.total_samples
 
@@ -127,25 +94,25 @@ class ConfusionMatrixTracker:
         specificity = tn / (tn + fp + eps)
         f1 = 2.0 * (precision * recall) / (precision + recall + eps)
 
-        # Handle classes with 0 support
+
         for c in range(self.num_classes):
             if support[c] == 0:
                 precision[c] = 0.0
                 recall[c] = 0.0
                 f1[c] = 0.0
 
-        # Global and Macro Aggregations
+
         top1_acc = (tp.sum() / max(float(total), 1.0)).item() * 100.0
         macro_prec = precision.mean().item() * 100.0
         macro_rec = recall.mean().item() * 100.0
         macro_f1 = f1.mean().item() * 100.0
 
-        # Micro Aggregations (Micro Precision = Micro Recall = Micro F1 = Top-1 Accuracy in single-label multi-class)
+
         micro_prec = (tp.sum() / (tp.sum() + fp.sum() + eps)).item() * 100.0
         micro_rec = (tp.sum() / (tp.sum() + fn.sum() + eps)).item() * 100.0
         micro_f1 = 2.0 * (micro_prec * micro_rec) / (micro_prec + micro_rec + eps)
 
-        # Weighted F1
+
         weights = support / max(float(total), 1.0)
         weighted_f1 = (f1 * weights).sum().item() * 100.0
 
@@ -178,9 +145,8 @@ class ConfusionMatrixTracker:
         }
 
     def classification_report(self) -> str:
-        """
-        Formats a formatted ASCII classification report table matching academic standards.
-        """
+
+
         metrics = self.compute_metrics()
         lines = []
         lines.append("=" * 82)
@@ -200,20 +166,8 @@ class ConfusionMatrixTracker:
 
 
 class EarlyStopping:
-    """
-    Early Stopping mechanism to halt training when a monitored validation metric ceases to improve.
-    Supports monitoring validation loss ('min' mode) or validation accuracy/F1 ('max' mode).
-    
-    Why Monitor Validation Loss by Default?
-      Cross-Entropy Loss is continuous, differentiable, and reflects output confidence. When a model
-      begins to overfit, validation loss increases immediately due to penalized confident mistakes,
-      acting as an early-warning 'canary' before discrete classification accuracy degrades.
-      
-    When to Monitor F1 or Recall?
-      In class-imbalanced datasets or safety-critical domains (e.g., medical diagnostics), overall loss
-      can be dominated by easy majority classes while performance on rare/critical classes collapses.
-      Monitoring Macro F1 or Recall directly protects against this failure mode.
-    """
+
+
     def __init__(
         self,
         patience: int = 5,
@@ -239,14 +193,8 @@ class EarlyStopping:
         self.best_state_dict: Optional[Dict[str, Any]] = None
 
     def step(self, current_value: float, model: Optional[nn.Module] = None) -> bool:
-        """
-        Evaluates the current epoch's metric against the best observed score.
-        Args:
-            current_value: Monitored metric value for the current epoch.
-            model: PyTorch model instance whose state dict will be cached if an improvement occurs.
-        Returns:
-            True if early stopping patience has expired and training should halt; False otherwise.
-        """
+
+
         if self.best_score is None:
             self.best_score = current_value
             self._save_checkpoint(current_value, model)
@@ -284,9 +232,8 @@ class EarlyStopping:
                     print(f"[EarlyStopping] Best model checkpoint saved to: {self.save_path}")
 
     def restore_best_weights(self, model: nn.Module):
-        """
-        Restores the model's weights to the state corresponding to the optimal monitored score.
-        """
+
+
         if self.best_state_dict is not None:
             model.load_state_dict(self.best_state_dict)
             if self.verbose:

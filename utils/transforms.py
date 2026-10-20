@@ -1,54 +1,24 @@
-"""
-ELEC 475: Lab 2 - PyTorch Transform & Augmentation Pipelines (Starter Template)
-"""
-import torchvision.transforms as transforms
+from torchvision import transforms
+
 
 DATASET_STATS = {
-    "cifar10": {
-        "mean": [0.4914, 0.4822, 0.4465],
-        "std":  [0.2470, 0.2435, 0.2616]
-    },
-    "tiny_imagenet": {
-        "mean": [0.4802, 0.4481, 0.3975],
-        "std":  [0.2764, 0.2689, 0.2821]
-    }
+    "cifar10": {"mean": [0.4914, 0.4822, 0.4465], "std": [0.2470, 0.2435, 0.2616]},
+    "tiny_imagenet": {"mean": [0.4802, 0.4481, 0.3975], "std": [0.2764, 0.2689, 0.2821]}
 }
 
-def get_train_transforms(dataset: str = "cifar10", augment: bool = True, target_size: int = 64):
-    """
-    Constructs the training transform pipeline.
-    """
-    stats = DATASET_STATS.get(dataset.lower(), DATASET_STATS["cifar10"])
-    
-    transform_list = [
-        transforms.Resize((target_size, target_size))
-    ]
 
+def get_train_transforms(dataset="cifar10", augment=True, target_size=64):
+    stats = DATASET_STATS[dataset]
+    operations = [transforms.Resize((target_size, target_size))]
     if augment:
-        # ======================================================================
-        # TODO [POST-LAB STEP 3]: Implement PyTorch Data Augmentation Pipeline
-        #
-        # Add the following pure PyTorch GPU-friendly transformations:
-        #   1. transforms.RandomCrop(target_size, padding=4, padding_mode="reflect")
-        #   2. transforms.RandomHorizontalFlip(p=0.5)
-        #   3. transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2)
-        # ======================================================================
-        pass
+        operations.extend([
+            transforms.RandomCrop(target_size, padding=4, padding_mode="reflect"),
+            transforms.RandomHorizontalFlip(0.5),
+            transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2)
+        ])
+    operations.extend([transforms.ToTensor(), transforms.Normalize(**stats)])
+    return transforms.Compose(operations)
 
-    transform_list.extend([
-        transforms.ToTensor(),
-        transforms.Normalize(mean=stats["mean"], std=stats["std"])
-    ])
 
-    return transforms.Compose(transform_list)
-
-def get_test_transforms(dataset: str = "cifar10", target_size: int = 64):
-    """
-    Constructs deterministic evaluation transform pipeline (no random augmentations).
-    """
-    stats = DATASET_STATS.get(dataset.lower(), DATASET_STATS["cifar10"])
-    return transforms.Compose([
-        transforms.Resize((target_size, target_size)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=stats["mean"], std=stats["std"])
-    ])
+def get_test_transforms(dataset="cifar10", target_size=64):
+    return get_train_transforms(dataset, augment=False, target_size=target_size)

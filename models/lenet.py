@@ -1,12 +1,9 @@
-"""
-ELEC 475: Lab 2 - Base LeNet-5 for RGB 64x64 images.
-"""
 import torch
 import torch.nn as nn
 
 
 class LeNet5(nn.Module):
-    """Classical LeNet-5 adapted for RGB 64x64 images."""
+
 
     def __init__(self, num_classes: int = 10, in_channels: int = 3):
         super().__init__()

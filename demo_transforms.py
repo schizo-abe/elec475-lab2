@@ -1,12 +1,3 @@
-"""
-ELEC 475: Lab 2 - Educational Transform Paradigm Diagnostic
-Compares PyTorch GPU Tensors vs OpenCV vs NumPy across:
-    1. Python Object Types
-    2. Data Types (dtypes)
-    3. Dimensionality & Memory Layouts (CHW vs HWC)
-    4. Memory Residency (Host RAM vs GPU VRAM)
-    5. Execution Latency & PCIe Host-to-Device Transfer Costs
-"""
 import time
 import numpy as np
 import torch
@@ -24,8 +15,8 @@ def run_diagnostic():
     print("=" * 80)
 
     np_img_orig = np.random.randint(0, 256, (64, 64, 3), dtype=np.uint8)
-    
-    # 1. OpenCV Pipeline
+
+
     if HAS_OPENCV:
         cv_img_bgr = cv2.cvtColor(np_img_orig, cv2.COLOR_RGB2BGR)
         cv_resized = cv2.resize(cv_img_bgr, (64, 64), interpolation=cv2.INTER_LINEAR)
@@ -43,7 +34,7 @@ def run_diagnostic():
     else:
         print("\n[1] OpenCV (cv2): Not installed, skipping.")
 
-    # 2. NumPy Pipeline
+
     np_flipped = np_img_orig[:, ::-1, :]
     np_normalized = np_flipped.astype(np.float32) / 255.0
 
@@ -54,7 +45,7 @@ def run_diagnostic():
     print(f"    - Value Range      : Min = {np_normalized.min():.4f}, Max = {np_normalized.max():.4f}")
     print(f"    - Memory Location  : Host System RAM (CPU)")
 
-    # 3. PyTorch Tensor Pipeline
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     tensor_input = torch.from_numpy(np_img_orig).permute(2, 0, 1).float().to(device) / 255.0
 
@@ -71,7 +62,7 @@ def run_diagnostic():
     print(f"    - Value Range      : Min = {tensor_output.min().item():.4f}, Max = {tensor_output.max().item():.4f} (Standardized)")
     print(f"    - Memory Location  : {tensor_output.device} ({'NVIDIA GPU VRAM' if 'cuda' in str(device) else 'Host CPU RAM'})")
 
-    # 4. Latency Benchmark
+
     N = 1000
     print("\n" + "-" * 80)
     print(f"Benchmark: Processing {N:,} Images (Resize + Flip + Normalize)")
@@ -83,7 +74,7 @@ def run_diagnostic():
             _ = cv2.flip(cv_img_bgr, 1).astype(np.float32) / 255.0
         t_cv = (time.perf_counter() - t0) * 1000
         print(f"- OpenCV (CPU)            : {t_cv:>7.2f} ms  ({N / (t_cv/1000):>7,.0f} img/s) + Host-to-Device Copy required")
-    
+
     t0 = time.perf_counter()
     for _ in range(N):
         _ = np_img_orig[:, ::-1, :].astype(np.float32) / 255.0

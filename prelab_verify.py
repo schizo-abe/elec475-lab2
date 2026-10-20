@@ -1,8 +1,3 @@
-"""
-ELEC 475: Lab 2 - Pre-Lab Environment & Dataset Verification Script
-Automated check of PyTorch, CUDA hardware acceleration, CIFAR-10, Tiny ImageNet,
-DataLoader batch mechanics, and EDA generation status.
-"""
 import os
 import torch
 import torchvision
@@ -14,7 +9,7 @@ print("=" * 76)
 print("ELEC 475: Lab 2 - Environment & Dataset Verification")
 print("=" * 76)
 
-# 1. Hardware & Framework Diagnostics
+
 print("\n[Step 1: PyTorch & GPU Acceleration Diagnostics]")
 print(f"  PyTorch Version         : {torch.__version__}")
 print(f"  Torchvision Version     : {torchvision.__version__}")
@@ -30,7 +25,7 @@ else:
     print("  Warning: CUDA not detected. Training will run on CPU.")
     print("  If using a machine without an NVIDIA GPU, use Google Colab with GPU runtime.")
 
-# 2. CIFAR-10 Download & Tensor Shape Check
+
 print("\n[Step 2: CIFAR-10 Dataset Verification (Mandatory In-Lab Dataset)]")
 DATA_DIR = "./data"
 os.makedirs(DATA_DIR, exist_ok=True)
@@ -54,7 +49,7 @@ print(f"  Sample Value Range      : Min = {sample_img.min():.4f}, Max = {sample_
 assert sample_img.shape == torch.Size([3, 64, 64]), f"Unexpected shape {sample_img.shape}!"
 assert 0.0 <= sample_img.min() and sample_img.max() <= 1.0, "Values outside [0.0, 1.0]!"
 
-# 3. Mini-Batch DataLoader Check
+
 print("\n[Step 3: Mini-Batch DataLoader Pipeline Check]")
 sample_loader = DataLoader(train_set, batch_size=64, shuffle=True, num_workers=0)
 batch_imgs, batch_labels = next(iter(sample_loader))
@@ -62,7 +57,7 @@ print(f"  Batch Tensor Shape      : {batch_imgs.shape} --> Expected: torch.Size(
 print(f"  Batch Labels Shape      : {batch_labels.shape} --> Expected: torch.Size([64])")
 assert batch_imgs.shape == torch.Size([64, 3, 64, 64]), "Batch tensor shape mismatch!"
 
-# 4. Tiny ImageNet-200 Dataset Check
+
 print("\n[Step 4: Tiny ImageNet-200 Dataset Check]")
 tiny_path = os.path.join(DATA_DIR, "tiny-imagenet-200")
 if os.path.exists(tiny_path) and os.path.isdir(os.path.join(tiny_path, "train")):
@@ -72,7 +67,7 @@ else:
     print("  Action: Download and extract tiny-imagenet-200 into ./data/ or run:")
     print("    python utils/eda.py --dataset tiny_imagenet")
 
-# 5. Exploratory Data Analysis (EDA) Artifact Check
+
 print("\n[Step 5: Exploratory Data Analysis (EDA) Artifact Check]")
 plots_dir = "./plots"
 eda_cifar_files = [

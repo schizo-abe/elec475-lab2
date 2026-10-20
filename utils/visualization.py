@@ -1,6 +1,3 @@
-"""
-ELEC 475: Lab 2 - Plotting & Visualization Utilities
-"""
 import os
 import matplotlib.pyplot as plt
 from typing import List, Dict
@@ -18,7 +15,7 @@ def plot_training_curves(
 
     plt.figure(figsize=(12, 5))
 
-    # Loss Curve
+
     plt.subplot(1, 2, 1)
     plt.plot(epochs, train_losses, 'b-o', label='Train Loss')
     plt.plot(epochs, val_losses, 'r--s', label='Val Loss')
@@ -28,7 +25,7 @@ def plot_training_curves(
     plt.legend(loc='upper right')
     plt.grid(True, linestyle='--', alpha=0.6)
 
-    # Accuracy Curve
+
     plt.subplot(1, 2, 2)
     plt.plot(epochs, train_accs, 'b-o', label='Train Accuracy')
     plt.plot(epochs, val_accs, 'g--^', label='Val Accuracy')
