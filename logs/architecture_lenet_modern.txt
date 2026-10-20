@@ -1,0 +1,30 @@
+<frozen runpy>:128: RuntimeWarning: 'models.lenet_modern' found in sys.modules after import of package 'models', but prior to execution of 'models.lenet_modern'; this may result in unpredictable behaviour
+Testing Modernized LeNet Architecture:
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+LeNetModern                              [1, 10]                   --
+├─Sequential: 1-1                        [1, 16, 15, 15]           --
+│    └─Conv2d: 2-1                       [1, 6, 64, 64]            456
+│    └─ReLU: 2-2                         [1, 6, 64, 64]            --
+│    └─MaxPool2d: 2-3                    [1, 6, 31, 31]            --
+│    └─Conv2d: 2-4                       [1, 16, 31, 31]           2,416
+│    └─ReLU: 2-5                         [1, 16, 31, 31]           --
+│    └─MaxPool2d: 2-6                    [1, 16, 15, 15]           --
+├─Sequential: 1-2                        [1, 10]                   --
+│    └─Linear: 2-7                       [1, 120]                  432,120
+│    └─ReLU: 2-8                         [1, 120]                  --
+│    └─Linear: 2-9                       [1, 84]                   10,164
+│    └─ReLU: 2-10                        [1, 84]                   --
+│    └─Linear: 2-11                      [1, 10]                   850
+==========================================================================================
+Total params: 446,006
+Trainable params: 446,006
+Non-trainable params: 0
+Total mult-adds (Units.MEGABYTES): 4.63
+==========================================================================================
+Input size (MB): 0.05
+Forward/backward pass size (MB): 0.32
+Params size (MB): 1.78
+Estimated Total Size (MB): 2.15
+==========================================================================================

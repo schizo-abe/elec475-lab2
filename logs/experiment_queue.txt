@@ -1,0 +1,107 @@
+[1/54] Starting cifar10_lenet_seed42
+Completed cifar10_lenet_seed42: accuracy=54.70; F1=54.06
+[2/54] Starting cifar10_lenet_modern_seed42
+Completed cifar10_lenet_modern_seed42: accuracy=65.24; F1=64.76
+[3/54] Starting cifar10_alexnet_none_seed42
+Completed cifar10_alexnet_none_seed42: accuracy=72.24; F1=71.89
+[4/54] Starting cifar10_alexnet_lrn_seed42
+Completed cifar10_alexnet_lrn_seed42: accuracy=76.11; F1=75.91
+[5/54] Already completed cifar10_alexnet_bn_seed42
+[6/54] Starting cifar10_alexnet_bn_aug_seed42
+Completed cifar10_alexnet_bn_aug_seed42: accuracy=82.94; F1=82.90
+[7/54] Starting cifar10_zoo_alexnet_seed42
+Completed cifar10_zoo_alexnet_seed42: accuracy=64.36; F1=64.22
+[8/54] Starting cifar10_alexnet_bn_noaug15_seed42
+Completed cifar10_alexnet_bn_noaug15_seed42: accuracy=81.42; F1=81.10
+[9/54] Starting tiny_imagenet_lenet_seed42
+Completed tiny_imagenet_lenet_seed42: accuracy=10.62; F1=8.64
+[10/54] Starting tiny_imagenet_lenet_modern_seed42
+Completed tiny_imagenet_lenet_modern_seed42: accuracy=18.86; F1=17.21
+[11/54] Starting tiny_imagenet_alexnet_none_seed42
+Completed tiny_imagenet_alexnet_none_seed42: accuracy=15.97; F1=13.54
+[12/54] Starting tiny_imagenet_alexnet_lrn_seed42
+Completed tiny_imagenet_alexnet_lrn_seed42: accuracy=17.51; F1=14.99
+[13/54] Starting tiny_imagenet_alexnet_bn_seed42
+Completed tiny_imagenet_alexnet_bn_seed42: accuracy=29.28; F1=27.24
+[14/54] Starting tiny_imagenet_alexnet_bn_aug_seed42
+Completed tiny_imagenet_alexnet_bn_aug_seed42: accuracy=34.12; F1=32.65
+[15/54] Starting tiny_imagenet_zoo_alexnet_seed42
+Completed tiny_imagenet_zoo_alexnet_seed42: accuracy=10.21; F1=7.74
+[16/54] Starting tiny_imagenet_alexnet_bn_noaug15_seed42
+Completed tiny_imagenet_alexnet_bn_noaug15_seed42: accuracy=33.90; F1=33.01
+[17/54] Starting cifar10_alexnet_bn_lr0003_seed42
+Completed cifar10_alexnet_bn_lr0003_seed42: accuracy=81.75; F1=81.51
+[18/54] Starting cifar10_alexnet_bn_lr003_seed42
+Completed cifar10_alexnet_bn_lr003_seed42: accuracy=76.27; F1=76.54
+[19/54] Starting cifar10_lenet_seed123
+Completed cifar10_lenet_seed123: accuracy=54.10; F1=53.72
+[20/54] Starting cifar10_lenet_modern_seed123
+Completed cifar10_lenet_modern_seed123: accuracy=65.62; F1=65.57
+[21/54] Starting cifar10_alexnet_none_seed123
+Completed cifar10_alexnet_none_seed123: accuracy=71.35; F1=71.17
+[22/54] Starting cifar10_alexnet_lrn_seed123
+Completed cifar10_alexnet_lrn_seed123: accuracy=73.84; F1=73.97
+[23/54] Starting cifar10_alexnet_bn_seed123
+Completed cifar10_alexnet_bn_seed123: accuracy=80.32; F1=80.04
+[24/54] Starting cifar10_alexnet_bn_aug_seed123
+Completed cifar10_alexnet_bn_aug_seed123: accuracy=82.96; F1=82.89
+[25/54] Starting cifar10_zoo_alexnet_seed123
+Completed cifar10_zoo_alexnet_seed123: accuracy=64.70; F1=64.35
+[26/54] Starting cifar10_alexnet_bn_noaug15_seed123
+Completed cifar10_alexnet_bn_noaug15_seed123: accuracy=82.80; F1=82.66
+[27/54] Starting tiny_imagenet_lenet_seed123
+Completed tiny_imagenet_lenet_seed123: accuracy=10.34; F1=8.50
+[28/54] Starting tiny_imagenet_lenet_modern_seed123
+Completed tiny_imagenet_lenet_modern_seed123: accuracy=19.26; F1=17.41
+[29/54] Starting tiny_imagenet_alexnet_none_seed123
+Completed tiny_imagenet_alexnet_none_seed123: accuracy=15.07; F1=12.68
+[30/54] Starting tiny_imagenet_alexnet_lrn_seed123
+Completed tiny_imagenet_alexnet_lrn_seed123: accuracy=17.15; F1=14.89
+[31/54] Starting tiny_imagenet_alexnet_bn_seed123
+Completed tiny_imagenet_alexnet_bn_seed123: accuracy=28.77; F1=27.07
+[32/54] Starting tiny_imagenet_alexnet_bn_aug_seed123
+Completed tiny_imagenet_alexnet_bn_aug_seed123: accuracy=34.43; F1=33.18
+[33/54] Starting tiny_imagenet_zoo_alexnet_seed123
+Completed tiny_imagenet_zoo_alexnet_seed123: accuracy=6.95; F1=4.59
+[34/54] Starting tiny_imagenet_alexnet_bn_noaug15_seed123
+Completed tiny_imagenet_alexnet_bn_noaug15_seed123: accuracy=35.07; F1=33.53
+[35/54] Starting cifar10_alexnet_bn_lr0003_seed123
+Completed cifar10_alexnet_bn_lr0003_seed123: accuracy=80.96; F1=80.62
+[36/54] Starting cifar10_alexnet_bn_lr003_seed123
+Completed cifar10_alexnet_bn_lr003_seed123: accuracy=76.61; F1=76.35
+[37/54] Starting cifar10_lenet_seed999
+Completed cifar10_lenet_seed999: accuracy=52.93; F1=52.50
+[38/54] Starting cifar10_lenet_modern_seed999
+Completed cifar10_lenet_modern_seed999: accuracy=64.92; F1=64.99
+[39/54] Starting cifar10_alexnet_none_seed999
+Completed cifar10_alexnet_none_seed999: accuracy=72.74; F1=72.53
+[40/54] Starting cifar10_alexnet_lrn_seed999
+Completed cifar10_alexnet_lrn_seed999: accuracy=73.61; F1=73.44
+[41/54] Starting cifar10_alexnet_bn_seed999
+Completed cifar10_alexnet_bn_seed999: accuracy=79.05; F1=78.94
+[42/54] Starting cifar10_alexnet_bn_aug_seed999
+Completed cifar10_alexnet_bn_aug_seed999: accuracy=82.38; F1=82.04
+[43/54] Starting cifar10_zoo_alexnet_seed999
+Completed cifar10_zoo_alexnet_seed999: accuracy=65.84; F1=65.58
+[44/54] Starting cifar10_alexnet_bn_noaug15_seed999
+Completed cifar10_alexnet_bn_noaug15_seed999: accuracy=82.65; F1=82.63
+[45/54] Starting tiny_imagenet_lenet_seed999
+Completed tiny_imagenet_lenet_seed999: accuracy=9.90; F1=8.05
+[46/54] Starting tiny_imagenet_lenet_modern_seed999
+Completed tiny_imagenet_lenet_modern_seed999: accuracy=18.99; F1=17.03
+[47/54] Starting tiny_imagenet_alexnet_none_seed999
+Completed tiny_imagenet_alexnet_none_seed999: accuracy=15.59; F1=13.32
+[48/54] Starting tiny_imagenet_alexnet_lrn_seed999
+Completed tiny_imagenet_alexnet_lrn_seed999: accuracy=17.49; F1=14.77
+[49/54] Starting tiny_imagenet_alexnet_bn_seed999
+Completed tiny_imagenet_alexnet_bn_seed999: accuracy=28.80; F1=27.22
+[50/54] Starting tiny_imagenet_alexnet_bn_aug_seed999
+Completed tiny_imagenet_alexnet_bn_aug_seed999: accuracy=35.32; F1=33.60
+[51/54] Starting tiny_imagenet_zoo_alexnet_seed999
+Completed tiny_imagenet_zoo_alexnet_seed999: accuracy=12.19; F1=9.50
+[52/54] Starting tiny_imagenet_alexnet_bn_noaug15_seed999
+Completed tiny_imagenet_alexnet_bn_noaug15_seed999: accuracy=33.85; F1=32.69
+[53/54] Starting cifar10_alexnet_bn_lr0003_seed999
+Completed cifar10_alexnet_bn_lr0003_seed999: accuracy=80.70; F1=80.69
+[54/54] Starting cifar10_alexnet_bn_lr003_seed999
+Completed cifar10_alexnet_bn_lr003_seed999: accuracy=75.10; F1=75.33

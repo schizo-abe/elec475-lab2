@@ -1,0 +1,32 @@
+$ python train.py --model alexnet --norm bn --dataset cifar10 --epochs 15 --lr 0.001 --seed 123 --amp --save-model checkpoints/cifar10_alexnet_bn_aug_seed123.pth --plot-file plots/cifar10_alexnet_bn_aug_seed123.png --results-file results/cifar10_alexnet_bn_aug_seed123.json
+{"model": "alexnet", "norm": "bn", "dataset": "cifar10", "data_dir": "./data", "epochs": 15, "batch_size": 128, "lr": 0.001, "weight_decay": 0.0001, "seed": 123, "workers": 4, "no_augment": false, "amp": true, "pretrained": false, "early_stopping": false, "patience": 5, "min_delta": 0.0001, "save_model": "checkpoints/cifar10_alexnet_bn_aug_seed123.pth", "plot_file": "plots/cifar10_alexnet_bn_aug_seed123.png", "results_file": "results/cifar10_alexnet_bn_aug_seed123.json"}
+Device: cuda; GPU: NVIDIA GeForce RTX 5070 Laptop GPU
+============================================================
+Computational Complexity Profile: alexnet
+Input Tensor Shape   : (1, 3, 64, 64)
+------------------------------------------------------------
+Total Parameters     : 6,611,402 (6.6114 M)
+Trainable Parameters : 6,611,402
+Multiply-Accumulates : 218,983,168 (218.98 MMACs)
+Floating Point Ops   : 437,966,336 (437.97 MFLOPs)
+Weight Size (FP32)   : 25.22 MB
+============================================================
+Train: 50000; validation: 10000; classes: 10
+Epoch | Train loss | Train acc | Val loss | Val acc | Macro F1 | Seconds
+  1 | 1.5837 | 41.23 | 1.3200 | 52.02 | 49.54 | 8.92
+  2 | 1.1942 | 57.78 | 1.1123 | 61.32 | 60.37 | 6.63
+  3 | 1.0157 | 64.54 | 0.9271 | 68.03 | 67.34 | 6.36
+  4 | 0.9017 | 68.88 | 0.8826 | 69.03 | 68.26 | 6.25
+  5 | 0.8187 | 72.10 | 0.8944 | 69.08 | 69.42 | 6.27
+  6 | 0.7491 | 74.65 | 0.7040 | 76.16 | 76.07 | 6.13
+  7 | 0.7046 | 76.51 | 0.7165 | 76.15 | 76.59 | 6.25
+  8 | 0.6524 | 78.17 | 0.7038 | 76.23 | 76.13 | 6.37
+  9 | 0.6151 | 79.31 | 0.6929 | 76.91 | 76.86 | 6.62
+ 10 | 0.5805 | 80.82 | 0.7282 | 75.57 | 74.61 | 6.35
+ 11 | 0.5517 | 81.75 | 0.6092 | 79.58 | 79.50 | 6.36
+ 12 | 0.5327 | 82.37 | 0.6553 | 79.12 | 79.04 | 6.41
+ 13 | 0.5117 | 83.16 | 0.5090 | 82.91 | 82.93 | 6.30
+ 14 | 0.4800 | 84.22 | 0.5061 | 82.96 | 82.89 | 6.55
+ 15 | 0.4582 | 84.78 | 0.5841 | 80.89 | 80.50 | 6.58
+Training curves successfully saved to: plots/cifar10_alexnet_bn_aug_seed123.png
+Selected epoch 14; train 86.99%; validation 82.96%; Macro F1 82.89%; gap 4.03 pp

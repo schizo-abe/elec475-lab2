@@ -1,0 +1,32 @@
+$ python train.py --model alexnet --norm bn --dataset tiny_imagenet --epochs 15 --lr 0.001 --seed 123 --amp --save-model checkpoints/tiny_imagenet_alexnet_bn_aug_seed123.pth --plot-file plots/tiny_imagenet_alexnet_bn_aug_seed123.png --results-file results/tiny_imagenet_alexnet_bn_aug_seed123.json
+{"model": "alexnet", "norm": "bn", "dataset": "tiny_imagenet", "data_dir": "./data", "epochs": 15, "batch_size": 128, "lr": 0.001, "weight_decay": 0.0001, "seed": 123, "workers": 4, "no_augment": false, "amp": true, "pretrained": false, "early_stopping": false, "patience": 5, "min_delta": 0.0001, "save_model": "checkpoints/tiny_imagenet_alexnet_bn_aug_seed123.pth", "plot_file": "plots/tiny_imagenet_alexnet_bn_aug_seed123.png", "results_file": "results/tiny_imagenet_alexnet_bn_aug_seed123.json"}
+Device: cuda; GPU: NVIDIA GeForce RTX 5070 Laptop GPU
+============================================================
+Computational Complexity Profile: alexnet
+Input Tensor Shape   : (1, 3, 64, 64)
+------------------------------------------------------------
+Total Parameters     : 6,806,152 (6.8062 M)
+Trainable Parameters : 6,806,152
+Multiply-Accumulates : 219,177,728 (219.18 MMACs)
+Floating Point Ops   : 438,355,456 (438.36 MFLOPs)
+Weight Size (FP32)   : 25.96 MB
+============================================================
+Train: 100000; validation: 10000; classes: 200
+Epoch | Train loss | Train acc | Val loss | Val acc | Macro F1 | Seconds
+  1 | 4.8590 | 3.10 | 4.4326 | 6.00 | 3.23 | 16.81
+  2 | 4.3469 | 7.61 | 4.1927 | 9.75 | 6.84 | 14.33
+  3 | 4.0520 | 11.42 | 3.9741 | 12.91 | 9.75 | 14.10
+  4 | 3.8463 | 14.47 | 3.6738 | 17.34 | 14.74 | 14.54
+  5 | 3.6916 | 17.14 | 3.6045 | 18.71 | 16.30 | 16.74
+  6 | 3.5491 | 19.31 | 3.4274 | 22.22 | 19.57 | 15.23
+  7 | 3.4255 | 21.71 | 3.2323 | 26.23 | 23.91 | 14.55
+  8 | 3.3159 | 23.52 | 3.1952 | 25.64 | 23.13 | 13.84
+  9 | 3.2183 | 25.30 | 3.2556 | 25.50 | 23.56 | 13.92
+ 10 | 3.1335 | 27.06 | 3.0935 | 28.41 | 27.25 | 14.96
+ 11 | 3.0524 | 28.54 | 2.9496 | 30.75 | 28.79 | 14.44
+ 12 | 2.9865 | 29.82 | 2.9144 | 31.47 | 29.80 | 14.26
+ 13 | 2.9239 | 31.15 | 2.8249 | 33.31 | 31.97 | 14.88
+ 14 | 2.8665 | 32.21 | 2.8292 | 33.30 | 31.92 | 14.48
+ 15 | 2.8147 | 33.04 | 2.8005 | 34.43 | 33.18 | 15.47
+Training curves successfully saved to: plots/tiny_imagenet_alexnet_bn_aug_seed123.png
+Selected epoch 15; train 39.14%; validation 34.43%; Macro F1 33.18%; gap 4.71 pp

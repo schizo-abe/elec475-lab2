@@ -1,0 +1,10 @@
+{
+  "training_runs": 54,
+  "epochs": 540,
+  "selected_checkpoint_metrics_match": true,
+  "all_training_samples_used": true,
+  "finite_weights": true,
+  "fresh_model_reload": true,
+  "plots_present": true,
+  "code_comments": 0
+}

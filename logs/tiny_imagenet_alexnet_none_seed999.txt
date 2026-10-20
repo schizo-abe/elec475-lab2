@@ -1,0 +1,27 @@
+$ python train.py --model alexnet --norm none --dataset tiny_imagenet --epochs 10 --lr 0.001 --seed 999 --amp --save-model checkpoints/tiny_imagenet_alexnet_none_seed999.pth --plot-file plots/tiny_imagenet_alexnet_none_seed999.png --results-file results/tiny_imagenet_alexnet_none_seed999.json --no-augment
+{"model": "alexnet", "norm": "none", "dataset": "tiny_imagenet", "data_dir": "./data", "epochs": 10, "batch_size": 128, "lr": 0.001, "weight_decay": 0.0001, "seed": 999, "workers": 4, "no_augment": true, "amp": true, "pretrained": false, "early_stopping": false, "patience": 5, "min_delta": 0.0001, "save_model": "checkpoints/tiny_imagenet_alexnet_none_seed999.pth", "plot_file": "plots/tiny_imagenet_alexnet_none_seed999.png", "results_file": "results/tiny_imagenet_alexnet_none_seed999.json"}
+Device: cuda; GPU: NVIDIA GeForce RTX 5070 Laptop GPU
+============================================================
+Computational Complexity Profile: alexnet
+Input Tensor Shape   : (1, 3, 64, 64)
+------------------------------------------------------------
+Total Parameters     : 6,803,592 (6.8036 M)
+Trainable Parameters : 6,803,592
+Multiply-Accumulates : 218,542,080 (218.54 MMACs)
+Floating Point Ops   : 437,084,160 (437.08 MFLOPs)
+Weight Size (FP32)   : 25.95 MB
+============================================================
+Train: 100000; validation: 10000; classes: 200
+Epoch | Train loss | Train acc | Val loss | Val acc | Macro F1 | Seconds
+  1 | 5.0998 | 1.32 | 4.8765 | 2.71 | 0.68 | 12.17
+  2 | 4.7707 | 3.59 | 4.5633 | 5.19 | 2.51 | 10.20
+  3 | 4.5074 | 6.06 | 4.3399 | 7.76 | 4.95 | 10.09
+  4 | 4.3386 | 8.01 | 4.2188 | 9.57 | 7.31 | 9.74
+  5 | 4.2177 | 9.53 | 4.1100 | 11.00 | 8.30 | 9.86
+  6 | 4.1262 | 10.71 | 4.0315 | 12.13 | 9.15 | 9.87
+  7 | 4.0511 | 11.74 | 3.9270 | 13.44 | 10.87 | 10.24
+  8 | 3.9868 | 12.79 | 3.8668 | 14.49 | 11.80 | 10.00
+  9 | 3.9323 | 13.48 | 3.8759 | 14.36 | 11.88 | 9.95
+ 10 | 3.8833 | 14.31 | 3.7902 | 15.59 | 13.32 | 9.84
+Training curves successfully saved to: plots/tiny_imagenet_alexnet_none_seed999.png
+Selected epoch 10; train 18.27%; validation 15.59%; Macro F1 13.32%; gap 2.68 pp

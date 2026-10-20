@@ -5,6 +5,7 @@ from torch import nn
 from models import get_model
 from utils.dataset import get_datasets
 from utils.metrics import ConfusionMatrixTracker, EarlyStopping
+from utils.profiler import ModelProfiler
 
 
 def main():
@@ -44,10 +45,15 @@ def main():
     assert stopper.step(1.2, stopper_model)
     stopper.restore_best_weights(stopper_model)
     assert all(torch.equal(stopper_model.state_dict()[key], value) for key, value in original.items())
+    probe = get_model("alexnet")
+    probe_state = {key: value.clone() for key, value in probe.state_dict().items()}
+    ModelProfiler(probe)
+    assert probe.training and set(probe_state) == set(probe.state_dict())
+    assert all(torch.equal(value, probe.state_dict()[key]) for key, value in probe_state.items())
     Path("results/verification.json").write_text(json.dumps({"models": records,
         "tiny_validation": {"train": len(train), "validation": len(val), "classes": len(classes),
                             "validation_per_class": 50, "paths_disjoint": True},
-        "metric_fixture": "passed", "early_stopping_restore": "passed"}, indent=2))
+        "metric_fixture": "passed", "early_stopping_restore": "passed", "profiler_preserves_state": "passed"}, indent=2))
     print("All architecture, gradient, split and metric checks passed.")
 
 

@@ -1,0 +1,506 @@
+[
+  {
+    "checkpoint": "cifar10_alexnet_bn_aug_seed123.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_bn_aug_seed42.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_bn_aug_seed999.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_bn_lr0003_seed123.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_bn_lr0003_seed42.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_bn_lr0003_seed999.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_bn_lr003_seed123.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_bn_lr003_seed42.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_bn_lr003_seed999.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_bn_noaug15_seed123.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_bn_noaug15_seed42.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_bn_noaug15_seed999.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_bn_seed123.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_bn_seed42.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_bn_seed999.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_lrn_seed123.pth",
+    "removed": [
+      "features.2.total_ops",
+      "features.2.total_params",
+      "features.6.total_ops",
+      "features.6.total_params",
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_lrn_seed42.pth",
+    "removed": [
+      "features.2.total_ops",
+      "features.2.total_params",
+      "features.6.total_ops",
+      "features.6.total_params",
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_lrn_seed999.pth",
+    "removed": [
+      "features.2.total_ops",
+      "features.2.total_params",
+      "features.6.total_ops",
+      "features.6.total_params",
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_none_seed123.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_none_seed42.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_alexnet_none_seed999.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_lenet_modern_seed123.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_lenet_modern_seed42.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_lenet_modern_seed999.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_lenet_seed123.pth",
+    "removed": [
+      "classifier.1.total_ops",
+      "classifier.1.total_params",
+      "classifier.3.total_ops",
+      "classifier.3.total_params",
+      "feature_extractor.1.total_ops",
+      "feature_extractor.1.total_params",
+      "feature_extractor.4.total_ops",
+      "feature_extractor.4.total_params",
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_lenet_seed42.pth",
+    "removed": [
+      "classifier.1.total_ops",
+      "classifier.1.total_params",
+      "classifier.3.total_ops",
+      "classifier.3.total_params",
+      "feature_extractor.1.total_ops",
+      "feature_extractor.1.total_params",
+      "feature_extractor.4.total_ops",
+      "feature_extractor.4.total_params",
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_lenet_seed999.pth",
+    "removed": [
+      "classifier.1.total_ops",
+      "classifier.1.total_params",
+      "classifier.3.total_ops",
+      "classifier.3.total_params",
+      "feature_extractor.1.total_ops",
+      "feature_extractor.1.total_params",
+      "feature_extractor.4.total_ops",
+      "feature_extractor.4.total_params",
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_zoo_alexnet_seed123.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_zoo_alexnet_seed42.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "cifar10_zoo_alexnet_seed999.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_alexnet_bn_aug_seed123.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_alexnet_bn_aug_seed42.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_alexnet_bn_aug_seed999.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_alexnet_bn_noaug15_seed123.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_alexnet_bn_noaug15_seed42.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_alexnet_bn_noaug15_seed999.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_alexnet_bn_seed123.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_alexnet_bn_seed42.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_alexnet_bn_seed999.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_alexnet_lrn_seed123.pth",
+    "removed": [
+      "features.2.total_ops",
+      "features.2.total_params",
+      "features.6.total_ops",
+      "features.6.total_params",
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_alexnet_lrn_seed42.pth",
+    "removed": [
+      "features.2.total_ops",
+      "features.2.total_params",
+      "features.6.total_ops",
+      "features.6.total_params",
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_alexnet_lrn_seed999.pth",
+    "removed": [
+      "features.2.total_ops",
+      "features.2.total_params",
+      "features.6.total_ops",
+      "features.6.total_params",
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_alexnet_none_seed123.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_alexnet_none_seed42.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_alexnet_none_seed999.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_lenet_modern_seed123.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_lenet_modern_seed42.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_lenet_modern_seed999.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_lenet_seed123.pth",
+    "removed": [
+      "classifier.1.total_ops",
+      "classifier.1.total_params",
+      "classifier.3.total_ops",
+      "classifier.3.total_params",
+      "feature_extractor.1.total_ops",
+      "feature_extractor.1.total_params",
+      "feature_extractor.4.total_ops",
+      "feature_extractor.4.total_params",
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_lenet_seed42.pth",
+    "removed": [
+      "classifier.1.total_ops",
+      "classifier.1.total_params",
+      "classifier.3.total_ops",
+      "classifier.3.total_params",
+      "feature_extractor.1.total_ops",
+      "feature_extractor.1.total_params",
+      "feature_extractor.4.total_ops",
+      "feature_extractor.4.total_params",
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_lenet_seed999.pth",
+    "removed": [
+      "classifier.1.total_ops",
+      "classifier.1.total_params",
+      "classifier.3.total_ops",
+      "classifier.3.total_params",
+      "feature_extractor.1.total_ops",
+      "feature_extractor.1.total_params",
+      "feature_extractor.4.total_ops",
+      "feature_extractor.4.total_params",
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_zoo_alexnet_seed123.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_zoo_alexnet_seed42.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  },
+  {
+    "checkpoint": "tiny_imagenet_zoo_alexnet_seed999.pth",
+    "removed": [
+      "total_ops",
+      "total_params"
+    ],
+    "all_model_tensors_identical": true
+  }
+]

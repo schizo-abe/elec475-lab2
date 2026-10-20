@@ -1,0 +1,27 @@
+$ python train.py --model alexnet --norm bn --dataset cifar10 --epochs 10 --lr 0.001 --seed 123 --amp --save-model checkpoints/cifar10_alexnet_bn_seed123.pth --plot-file plots/cifar10_alexnet_bn_seed123.png --results-file results/cifar10_alexnet_bn_seed123.json --no-augment
+{"model": "alexnet", "norm": "bn", "dataset": "cifar10", "data_dir": "./data", "epochs": 10, "batch_size": 128, "lr": 0.001, "weight_decay": 0.0001, "seed": 123, "workers": 4, "no_augment": true, "amp": true, "pretrained": false, "early_stopping": false, "patience": 5, "min_delta": 0.0001, "save_model": "checkpoints/cifar10_alexnet_bn_seed123.pth", "plot_file": "plots/cifar10_alexnet_bn_seed123.png", "results_file": "results/cifar10_alexnet_bn_seed123.json"}
+Device: cuda; GPU: NVIDIA GeForce RTX 5070 Laptop GPU
+============================================================
+Computational Complexity Profile: alexnet
+Input Tensor Shape   : (1, 3, 64, 64)
+------------------------------------------------------------
+Total Parameters     : 6,611,402 (6.6114 M)
+Trainable Parameters : 6,611,402
+Multiply-Accumulates : 218,983,168 (218.98 MMACs)
+Floating Point Ops   : 437,966,336 (437.97 MFLOPs)
+Weight Size (FP32)   : 25.22 MB
+============================================================
+Train: 50000; validation: 10000; classes: 10
+Epoch | Train loss | Train acc | Val loss | Val acc | Macro F1 | Seconds
+  1 | 1.5224 | 43.34 | 1.6106 | 43.41 | 40.83 | 8.58
+  2 | 1.1203 | 60.34 | 0.9861 | 64.91 | 64.63 | 5.74
+  3 | 0.9342 | 67.54 | 0.8679 | 70.92 | 71.05 | 5.74
+  4 | 0.8192 | 72.07 | 0.8290 | 71.81 | 71.07 | 5.75
+  5 | 0.7252 | 75.31 | 0.7334 | 75.24 | 75.25 | 5.87
+  6 | 0.6495 | 77.87 | 0.6950 | 76.71 | 76.48 | 5.79
+  7 | 0.5940 | 80.23 | 0.7552 | 74.80 | 75.12 | 5.80
+  8 | 0.5426 | 81.89 | 0.8243 | 72.15 | 72.10 | 5.75
+  9 | 0.5009 | 83.14 | 0.6367 | 78.44 | 78.39 | 5.72
+ 10 | 0.4554 | 84.65 | 0.6025 | 80.32 | 80.04 | 5.82
+Training curves successfully saved to: plots/cifar10_alexnet_bn_seed123.png
+Selected epoch 10; train 86.92%; validation 80.32%; Macro F1 80.04%; gap 6.60 pp

@@ -1,0 +1,98 @@
+{
+  "models": [
+    {
+      "model": "lenet",
+      "norm": "none",
+      "classes": 10,
+      "parameters": 338486,
+      "backward": "passed"
+    },
+    {
+      "model": "lenet_modern",
+      "norm": "none",
+      "classes": 10,
+      "parameters": 446006,
+      "backward": "passed"
+    },
+    {
+      "model": "alexnet",
+      "norm": "none",
+      "classes": 10,
+      "parameters": 6608842,
+      "backward": "passed"
+    },
+    {
+      "model": "alexnet",
+      "norm": "lrn",
+      "classes": 10,
+      "parameters": 6608842,
+      "backward": "passed"
+    },
+    {
+      "model": "alexnet",
+      "norm": "bn",
+      "classes": 10,
+      "parameters": 6611402,
+      "backward": "passed"
+    },
+    {
+      "model": "zoo_alexnet",
+      "norm": "none",
+      "classes": 10,
+      "parameters": 57044810,
+      "backward": "passed"
+    },
+    {
+      "model": "lenet",
+      "norm": "none",
+      "classes": 200,
+      "parameters": 354636,
+      "backward": "passed"
+    },
+    {
+      "model": "lenet_modern",
+      "norm": "none",
+      "classes": 200,
+      "parameters": 462156,
+      "backward": "passed"
+    },
+    {
+      "model": "alexnet",
+      "norm": "none",
+      "classes": 200,
+      "parameters": 6803592,
+      "backward": "passed"
+    },
+    {
+      "model": "alexnet",
+      "norm": "lrn",
+      "classes": 200,
+      "parameters": 6803592,
+      "backward": "passed"
+    },
+    {
+      "model": "alexnet",
+      "norm": "bn",
+      "classes": 200,
+      "parameters": 6806152,
+      "backward": "passed"
+    },
+    {
+      "model": "zoo_alexnet",
+      "norm": "none",
+      "classes": 200,
+      "parameters": 57823240,
+      "backward": "passed"
+    }
+  ],
+  "tiny_validation": {
+    "train": 100000,
+    "validation": 10000,
+    "classes": 200,
+    "validation_per_class": 50,
+    "paths_disjoint": true
+  },
+  "metric_fixture": "passed",
+  "early_stopping_restore": "passed",
+  "profiler_preserves_state": "passed"
+}

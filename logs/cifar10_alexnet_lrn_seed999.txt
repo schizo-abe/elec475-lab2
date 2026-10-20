@@ -1,0 +1,27 @@
+$ python train.py --model alexnet --norm lrn --dataset cifar10 --epochs 10 --lr 0.001 --seed 999 --amp --save-model checkpoints/cifar10_alexnet_lrn_seed999.pth --plot-file plots/cifar10_alexnet_lrn_seed999.png --results-file results/cifar10_alexnet_lrn_seed999.json --no-augment
+{"model": "alexnet", "norm": "lrn", "dataset": "cifar10", "data_dir": "./data", "epochs": 10, "batch_size": 128, "lr": 0.001, "weight_decay": 0.0001, "seed": 999, "workers": 4, "no_augment": true, "amp": true, "pretrained": false, "early_stopping": false, "patience": 5, "min_delta": 0.0001, "save_model": "checkpoints/cifar10_alexnet_lrn_seed999.pth", "plot_file": "plots/cifar10_alexnet_lrn_seed999.png", "results_file": "results/cifar10_alexnet_lrn_seed999.json"}
+Device: cuda; GPU: NVIDIA GeForce RTX 5070 Laptop GPU
+============================================================
+Computational Complexity Profile: alexnet
+Input Tensor Shape   : (1, 3, 64, 64)
+------------------------------------------------------------
+Total Parameters     : 6,608,842 (6.6088 M)
+Trainable Parameters : 6,608,842
+Multiply-Accumulates : 218,347,520 (218.35 MMACs)
+Floating Point Ops   : 436,695,040 (436.70 MFLOPs)
+Weight Size (FP32)   : 25.21 MB
+============================================================
+Train: 50000; validation: 10000; classes: 10
+Epoch | Train loss | Train acc | Val loss | Val acc | Macro F1 | Seconds
+  1 | 1.7222 | 33.52 | 1.4233 | 46.82 | 46.04 | 15.55
+  2 | 1.3617 | 49.99 | 1.2646 | 54.49 | 53.19 | 9.54
+  3 | 1.1875 | 57.45 | 1.1503 | 58.75 | 57.63 | 9.53
+  4 | 1.0698 | 62.22 | 1.0312 | 63.67 | 62.50 | 9.49
+  5 | 0.9649 | 66.08 | 0.9220 | 67.83 | 68.12 | 9.46
+  6 | 0.8804 | 69.30 | 0.9606 | 66.82 | 65.47 | 9.48
+  7 | 0.8141 | 71.73 | 0.8240 | 71.94 | 71.97 | 9.54
+  8 | 0.7590 | 73.76 | 0.8188 | 71.79 | 72.08 | 9.34
+  9 | 0.7087 | 75.31 | 0.7747 | 73.61 | 73.44 | 9.28
+ 10 | 0.6696 | 76.90 | 0.7795 | 73.93 | 73.51 | 9.42
+Training curves successfully saved to: plots/cifar10_alexnet_lrn_seed999.png
+Selected epoch 9; train 79.62%; validation 73.61%; Macro F1 73.44%; gap 6.01 pp
