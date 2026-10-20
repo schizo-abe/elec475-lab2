@@ -1,15 +1,3 @@
-"""
-ELEC 475: Lab 2 - Model Complexity & Hardware Profiling Utilities
-Provides:
-  1. Timer: High-precision wall-clock timer with CUDA synchronization (context manager & decorator).
-  2. ModelProfiler: Calculates Total Parameters, Trainable Parameters, MACs, and FLOPs.
-  3. benchmark_inference: Evaluates median latency (ms) and throughput (imgs/s) under warm-up.
-  4. compare_model_complexities: Formats multi-model complexity comparison tables.
-
-Academic Reference:
-  He et al. (CVPR 2016), "Deep Residual Learning for Image Recognition".
-  Howard et al. (arXiv 2017), "MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications".
-"""
 import time
 import functools
 from typing import Dict, Tuple, Optional, Any, Callable
@@ -17,20 +5,8 @@ import torch
 import torch.nn as nn
 
 class Timer:
-    """
-    High-precision execution timer with automatic CUDA synchronization.
-    Can be used as a context manager or a function decorator.
-    
-    Usage as context manager:
-        with Timer("Training Epoch") as t:
-            # execute code
-        print(f"Elapsed: {t.elapsed:.4f} s")
-        
-    Usage as decorator:
-        @Timer("Epoch Benchmark")
-        def my_training_step():
-            ...
-    """
+
+
     def __init__(self, name: str = "Operation", verbose: bool = False):
         self.name = name
         self.verbose = verbose
@@ -61,17 +37,10 @@ class Timer:
 
 
 class ModelProfiler:
-    """
-    Profiles neural network computational complexity:
-      - Trainable & Non-Trainable Parameters
-      - Multiply-Accumulate Operations (MACs)
-      - Floating Point Operations (FLOPs: ~2x MACs)
-      - Model Memory Footprint (MB)
-      
-    Works out-of-the-box via PyTorch forward hooks, with fallback to 'thop' if installed.
-    """
+
+
     def __init__(self, model: nn.Module, input_size: Tuple[int, ...] = (1, 3, 64, 64), device: str = "cpu"):
-        self.model = model
+        self.model = model.to(device)
         self.input_size = input_size
         self.device = torch.device(device)
         self.total_params, self.trainable_params = self._count_parameters()
@@ -83,7 +52,7 @@ class ModelProfiler:
         return total, trainable
 
     def _compute_flops(self) -> Tuple[int, int]:
-        """Calculates MACs and FLOPs using PyTorch module hooks or thop."""
+
         try:
             import thop
             dummy = torch.randn(*self.input_size, device=self.device)
@@ -93,7 +62,7 @@ class ModelProfiler:
         except Exception:
             pass
 
-        # Native PyTorch Forward Hook Profiler
+
         total_macs = 0
         hooks = []
 
@@ -118,7 +87,7 @@ class ModelProfiler:
                 k = m.kernel_size if isinstance(m.kernel_size, tuple) else (m.kernel_size, m.kernel_size)
                 total_macs += batch_size * out.numel() // batch_size * (k[0] * k[1])
 
-        # Register hooks
+
         for mod in self.model.modules():
             if isinstance(mod, nn.Conv2d):
                 hooks.append(mod.register_forward_hook(conv2d_hook))
@@ -127,8 +96,8 @@ class ModelProfiler:
             elif isinstance(mod, (nn.MaxPool2d, nn.AvgPool2d)):
                 hooks.append(mod.register_forward_hook(pool_hook))
 
-        self.model.eval()
         was_training = self.model.training
+        self.model.eval()
         dummy = torch.randn(*self.input_size, device=self.device)
         with torch.no_grad():
             try:
@@ -136,7 +105,7 @@ class ModelProfiler:
             except Exception:
                 pass
 
-        # Cleanup hooks
+
         for h in hooks:
             h.remove()
         self.model.train(was_training)
@@ -154,7 +123,7 @@ class ModelProfiler:
         return self.flops / 1e6
 
     def get_model_size_mb(self) -> float:
-        """Estimated memory size for float32 weights."""
+
         return (self.total_params * 4) / (1024 * 1024)
 
     def summary(self) -> Dict[str, Any]:
@@ -189,11 +158,8 @@ def benchmark_inference(
     reps: int = 100,
     warmup: int = 10
 ) -> Tuple[float, float]:
-    """
-    Measures inference latency and throughput with warm-up and CUDA synchronization.
-    Returns:
-        (median_latency_ms, throughput_imgs_per_sec)
-    """
+
+
     dev = torch.device(device)
     model = model.to(dev)
     model.eval()
@@ -201,14 +167,14 @@ def benchmark_inference(
     dummy = torch.randn(*input_size, device=dev)
     batch_size = input_size[0]
 
-    # Warmup runs
+
     with torch.no_grad():
         for _ in range(warmup):
             _ = model(dummy)
         if dev.type == "cuda":
             torch.cuda.synchronize()
 
-    # Timing runs
+
     timings = []
     with torch.no_grad():
         for _ in range(reps):
@@ -219,7 +185,7 @@ def benchmark_inference(
             if dev.type == "cuda":
                 torch.cuda.synchronize()
             t1 = time.perf_counter()
-            timings.append((t1 - t0) * 1000.0)  # to ms
+            timings.append((t1 - t0) * 1000.0)
 
     timings.sort()
     median_latency_ms = timings[len(timings) // 2]
@@ -232,10 +198,8 @@ def compare_model_complexities(
     input_size: Tuple[int, ...] = (1, 3, 64, 64),
     device: str = "cpu"
 ) -> str:
-    """
-    Generates a Markdown and console comparison table for multiple models.
-    Matches the academic reporting standards of He et al. (CVPR 2016) and Howard et al. (2017).
-    """
+
+
     headers = ["Model Architecture", "Params (M)", "MACs (M)", "FLOPs (M)", "Latency (ms)", "Throughput (img/s)"]
     rows = []
 

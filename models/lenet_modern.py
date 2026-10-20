@@ -1,12 +1,9 @@
-"""
-ELEC 475: Lab 2 - Modernized LeNet for RGB 64x64 images.
-"""
 import torch
 import torch.nn as nn
 
 
 class LeNetModern(nn.Module):
-    """LeNet variant using ReLU and overlapping max pooling."""
+
 
     def __init__(self, num_classes: int = 10, in_channels: int = 3):
         super().__init__()

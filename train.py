@@ -1,224 +1,135 @@
-"""
-ELEC 475: Lab 2 - Main Model Training Engine
-Supports LeNet-5, Modernized LeNet, AlexNet-64 (None/LRN/BN), and PyTorch Model Zoo AlexNet
-across CIFAR-10 and Tiny ImageNet-200.
-
-Features:
-  - Precise GPU-synchronized epoch timing via Timer
-  - Model complexity profiling (FLOPs & Parameters) via ModelProfiler
-  - Multi-metric evaluation: Cross-Entropy Loss, Top-1 Accuracy, and Macro F1 via ConfusionMatrixTracker
-  - Early Stopping mechanism monitoring Validation Loss, Accuracy, or Macro F1
-  - Real-time throughput (samples/second) logging
-"""
-import os
 import argparse
+import copy
+import json
+from pathlib import Path
+import time
 import torch
-import torch.nn as nn
-import torch.optim as optim
-from torchinfo import summary
-
+from torch import nn
 from models import get_model
-from utils import (
-    get_dataloaders,
-    AverageMeter,
-    compute_accuracy,
-    ConfusionMatrixTracker,
-    EarlyStopping,
-    plot_training_curves,
-    Timer,
-    ModelProfiler,
-    seed_everything
-)
+from utils.dataset import get_dataloaders, make_loader
+from utils.transforms import get_test_transforms
+from utils.seed import seed_everything
+from utils.profiler import Timer, ModelProfiler
+from utils.visualization import plot_training_curves
 
 
-def train_one_epoch(model, loader, criterion, optimizer, device):
-    model.train()
-    loss_meter = AverageMeter("Loss")
-    acc_meter = AverageMeter("Acc")
-
-    for imgs, targets in loader:
-        imgs = imgs.to(device, non_blocking=True)
-        targets = targets.to(device, non_blocking=True)
-
-        optimizer.zero_grad()
-        outputs = model(imgs)
-        loss = criterion(outputs, targets)
-        loss.backward()
-        optimizer.step()
-
-        acc = compute_accuracy(outputs, targets, topk=(1,))[0]
-        loss_meter.update(loss.item(), imgs.size(0))
-        acc_meter.update(acc, imgs.size(0))
-
-    return loss_meter.avg, acc_meter.avg
-
-
-def evaluate(model, loader, criterion, device, num_classes=10):
-    model.eval()
-    loss_meter = AverageMeter("Loss")
-    tracker = ConfusionMatrixTracker(num_classes=num_classes)
-
-    with torch.no_grad():
-        for imgs, targets in loader:
-            imgs = imgs.to(device, non_blocking=True)
-            targets = targets.to(device, non_blocking=True)
-
-            outputs = model(imgs)
-            loss = criterion(outputs, targets)
-
-            loss_meter.update(loss.item(), imgs.size(0))
-            tracker.update(outputs, targets)
-
-    metrics = tracker.compute_metrics()
-    return loss_meter.avg, metrics["top1_accuracy"], metrics["macro_f1"]
+def run_epoch(model, loader, device, optimizer=None, amp=False, num_classes=10):
+    model.train(optimizer is not None)
+    loss_sum = torch.zeros((), device=device)
+    matrix = torch.zeros((num_classes, num_classes), device=device, dtype=torch.long)
+    count = 0
+    for images, labels in loader:
+        images, labels = images.to(device, non_blocking=True), labels.to(device, non_blocking=True)
+        if optimizer is not None:
+            optimizer.zero_grad(set_to_none=True)
+        with torch.set_grad_enabled(optimizer is not None):
+            with torch.autocast(device_type=device.type, dtype=torch.bfloat16,
+                                enabled=amp and device.type == "cuda"):
+                outputs = model(images)
+                loss = nn.functional.cross_entropy(outputs, labels)
+            if optimizer is not None:
+                loss.backward()
+                optimizer.step()
+        loss_sum += loss.detach() * labels.numel()
+        positions = labels * num_classes + outputs.detach().argmax(1)
+        matrix += torch.bincount(positions, minlength=num_classes ** 2).reshape(num_classes, num_classes)
+        count += labels.numel()
+    matrix = matrix.double()
+    correct = matrix.diag()
+    denominator = matrix.sum(0) + matrix.sum(1)
+    f1 = torch.where(denominator > 0, 2 * correct / denominator, 0).mean()
+    return {"loss": loss_sum.item() / count, "accuracy": correct.sum().item() * 100 / count,
+            "macro_f1": f1.item() * 100, "samples": count}
 
 
 def main():
-    parser = argparse.ArgumentParser(description="ELEC 475: Lab 2 Model Trainer")
-    parser.add_argument("--model", type=str, default="lenet",
-                        choices=["lenet", "lenet_modern", "alexnet", "zoo_alexnet"],
-                        help="Model architecture: 'lenet', 'lenet_modern', 'alexnet', 'zoo_alexnet'")
-    parser.add_argument("--norm", type=str, default="bn", choices=["none", "lrn", "bn"],
-                        help="Normalization for AlexNet: 'none', 'lrn', 'bn'")
-    parser.add_argument("--pretrained", action="store_true", help="Use pretrained weights for Model Zoo architectures")
-    parser.add_argument("--dataset", type=str, default="cifar10", choices=["cifar10", "tiny_imagenet"],
-                        help="Dataset: 'cifar10' or 'tiny_imagenet'")
-    parser.add_argument("--data-dir", type=str, default="./data", help="Directory where dataset is stored")
-    parser.add_argument("--epochs", type=int, default=5, help="Number of training epochs")
-    parser.add_argument("--batch-size", type=int, default=128, help="Batch size")
-    parser.add_argument("--lr", type=float, default=1e-3, help="Learning rate")
-    parser.add_argument("--seed", type=int, default=42, help="Random seed for reproducibility across CPU/GPU/NumPy")
-    parser.add_argument("--no-augment", action="store_true", help="Disable training data augmentation")
-    parser.add_argument("--save-model", type=str, default=None, help="Path to save best model checkpoint (.pth)")
-    parser.add_argument("--plot-file", type=str, default=None, help="Path to save loss and accuracy curve plot")
-    # Early Stopping Options
-    parser.add_argument("--early-stopping", action="store_true", help="Enable early stopping mechanism")
-    parser.add_argument("--early-stopping-metric", type=str, default="val_loss",
-                        choices=["val_loss", "val_acc", "val_f1"],
-                        help="Validation metric to monitor for early stopping: 'val_loss', 'val_acc', or 'val_f1'")
-    parser.add_argument("--patience", type=int, default=5, help="Early stopping patience (epochs without improvement)")
-    parser.add_argument("--min-delta", type=float, default=1e-4, help="Minimum delta threshold to qualify as improvement")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model", choices=["lenet", "lenet_modern", "alexnet", "zoo_alexnet"], default="lenet")
+    parser.add_argument("--norm", choices=["none", "lrn", "bn"], default="bn")
+    parser.add_argument("--dataset", choices=["cifar10", "tiny_imagenet"], default="cifar10")
+    parser.add_argument("--data-dir", default="./data")
+    parser.add_argument("--epochs", type=int, default=5)
+    parser.add_argument("--batch-size", type=int, default=128)
+    parser.add_argument("--lr", type=float, default=0.001)
+    parser.add_argument("--weight-decay", type=float, default=0.0001)
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument("--no-augment", action="store_true")
+    parser.add_argument("--amp", action="store_true")
+    parser.add_argument("--pretrained", action="store_true")
+    parser.add_argument("--early-stopping", action="store_true")
+    parser.add_argument("--patience", type=int, default=5)
+    parser.add_argument("--min-delta", type=float, default=0.0001)
+    parser.add_argument("--save-model")
+    parser.add_argument("--plot-file")
+    parser.add_argument("--results-file", default="results/latest.json")
     args = parser.parse_args()
-
-    # Enforce global reproducibility across all RNG subsystems
-    seed_everything(args.seed, deterministic=True)
-
+    seed_everything(args.seed)
+    torch.set_num_threads(4)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print("=" * 88)
-    print("ELEC 475: Lab 2 Training Engine")
-    print(f"Device        : {device} ({torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU'})")
-    print(f"Model         : {args.model.upper()} (Norm: {args.norm.upper() if args.model == 'alexnet' else 'N/A'})")
-    print(f"Dataset       : {args.dataset.upper()} (Augmentation: {not args.no_augment})")
-    print(f"Hyperparams   : Epochs={args.epochs}, BatchSize={args.batch_size}, LR={args.lr}, Seed={args.seed}")
-    print(f"Early Stopping: {'Enabled (Monitor: ' + args.early_stopping_metric + ', Patience: ' + str(args.patience) + ')' if args.early_stopping else 'Disabled'}")
-    print("=" * 88)
-
-    # 1. Load Data
-    print("\nInitializing DataLoaders...")
+    print(json.dumps(vars(args)), flush=True)
+    print(f"Device: {device}; GPU: {torch.cuda.get_device_name(0) if device.type == 'cuda' else 'none'}", flush=True)
     train_loader, val_loader, num_classes, classes = get_dataloaders(
-        dataset=args.dataset,
-        data_dir=args.data_dir,
-        batch_size=args.batch_size,
-        use_augmentation=not args.no_augment,
-        target_size=64
-    )
-    num_train_samples = len(train_loader.dataset)
-    print(f"Train batches: {len(train_loader)} ({num_train_samples} samples), Val batches: {len(val_loader)}, Classes: {num_classes}")
-
-    # 2. Build Model
-    model = get_model(
-        args.model,
-        num_classes=num_classes,
-        in_channels=3,
-        norm_type=args.norm,
-        pretrained=args.pretrained
-    )
-    model = model.to(device)
-
-    # 3. Model Profiler (FLOPs, MACs, Parameters)
-    profiler = ModelProfiler(model, input_size=(1, 3, 64, 64), device=str(device))
-    profiler.print_summary(model_name=f"{args.model.upper()} ({args.norm})")
-
-    # Print summary
-    print("\nDetailed Layer Specification:")
-    summary(model, input_size=(1, 3, 64, 64), device=str(device))
-
-    # 4. Criterion & Optimizer
-    criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=1e-4)
-
-    # 5. Early Stopping Initialization
-    early_stopper = None
-    if args.early_stopping:
-        mode = "min" if args.early_stopping_metric == "val_loss" else "max"
-        early_stopper = EarlyStopping(
-            patience=args.patience,
-            min_delta=args.min_delta,
-            mode=mode,
-            monitor=args.early_stopping_metric,
-            save_path=args.save_model,
-            verbose=True
-        )
-
-    # 6. Training Loop with High-Precision CUDA Synchronization Timer
-    train_losses, val_losses = [], []
-    train_accs, val_accs = [], []
-    best_val_acc = 0.0
-    best_val_f1 = 0.0
-
-    print("\n" + "=" * 94)
-    print(f"{'Epoch':^7} | {'Train Loss':^11} | {'Train Acc (%)':^14} | {'Val Loss':^10} | {'Val Acc (%)':^12} | {'Val F1 (%)':^11} | {'Time (s)':^9} | {'Throughput':^10}")
-    print("-" * 94)
-
-    with Timer("Full Training Run") as total_timer:
-        for epoch in range(1, args.epochs + 1):
-            with Timer(f"Epoch {epoch}") as epoch_timer:
-                tr_loss, tr_acc = train_one_epoch(model, train_loader, criterion, optimizer, device)
-                v_loss, v_acc, v_f1 = evaluate(model, val_loader, criterion, device, num_classes=num_classes)
-
-            elapsed = epoch_timer.elapsed
-            throughput = num_train_samples / elapsed if elapsed > 0 else 0.0
-
-            train_losses.append(tr_loss)
-            val_losses.append(v_loss)
-            train_accs.append(tr_acc)
-            val_accs.append(v_acc)
-
-            print(f"{epoch:^7d} | {tr_loss:^11.4f} | {tr_acc:^14.2f} | {v_loss:^10.4f} | {v_acc:^12.2f} | {v_f1:^11.2f} | {elapsed:^9.2f} | {throughput:^8.1f} s/s")
-
-            # Check and update best metrics
-            if v_acc > best_val_acc:
-                best_val_acc = v_acc
-            if v_f1 > best_val_f1:
-                best_val_f1 = v_f1
-
-            # Standard model checkpoint save (if early stopping is not active)
-            if args.save_model and not args.early_stopping:
-                if v_acc == best_val_acc:
-                    os.makedirs(os.path.dirname(args.save_model) or ".", exist_ok=True)
-                    torch.save(model.state_dict(), args.save_model)
-
-            # Early Stopping Evaluation
-            if early_stopper is not None:
-                current_monitored = v_loss if args.early_stopping_metric == "val_loss" else (v_acc if args.early_stopping_metric == "val_acc" else v_f1)
-                should_stop = early_stopper.step(current_monitored, model=model)
-                if should_stop:
-                    print(f"\n[EarlyStopping] Halting training loop early at Epoch {epoch} due to plateau in {args.early_stopping_metric}.")
-                    early_stopper.restore_best_weights(model)
-                    break
-
-    print("=" * 94)
-    print(f"Training completed in {total_timer.elapsed:.2f}s.")
-    print(f"Best Val Accuracy: {best_val_acc:.2f}% | Best Val Macro F1: {best_val_f1:.2f}%")
-    print(f"Model Complexity : {profiler.get_params_millions():.3f}M Parameters | {profiler.get_flops_millions():.2f}M FLOPs")
-    if args.save_model:
-        print(f"Best model weights saved to: {args.save_model}")
-
-    # 7. Save Plots
+        dataset=args.dataset, data_dir=args.data_dir, batch_size=args.batch_size,
+        num_workers=args.workers, use_augmentation=not args.no_augment, seed=args.seed)
+    model = get_model(args.model, num_classes=num_classes, norm_type=args.norm,
+                      pretrained=args.pretrained).to(device)
+    profiler = ModelProfiler(model, device=str(device))
+    profiler.print_summary(args.model)
+    optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    print(f"Train: {len(train_loader.dataset)}; validation: {len(val_loader.dataset)}; classes: {num_classes}", flush=True)
+    print("Epoch | Train loss | Train acc | Val loss | Val acc | Macro F1 | Seconds", flush=True)
+    history, best_state, best_epoch = [], None, None
+    best_loss, waiting = float("inf"), 0
+    start = time.perf_counter()
+    for epoch in range(1, args.epochs + 1):
+        with Timer() as timer:
+            train = run_epoch(model, train_loader, device, optimizer, args.amp, num_classes)
+            val = run_epoch(model, val_loader, device, amp=args.amp, num_classes=num_classes)
+        if not all(torch.isfinite(torch.tensor(result["loss"])) for result in [train, val]):
+            raise RuntimeError("Non-finite loss")
+        row = {"epoch": epoch, "train": train, "validation": val, "seconds": timer.elapsed}
+        history.append(row)
+        print(f"{epoch:3d} | {train['loss']:.4f} | {train['accuracy']:.2f} | {val['loss']:.4f} | "
+              f"{val['accuracy']:.2f} | {val['macro_f1']:.2f} | {timer.elapsed:.2f}", flush=True)
+        if val["loss"] < best_loss - args.min_delta:
+            best_loss, best_epoch, waiting = val["loss"], epoch, 0
+            best_state = {key: value.detach().cpu().clone() for key, value in model.state_dict().items()}
+            if args.save_model:
+                Path(args.save_model).parent.mkdir(parents=True, exist_ok=True)
+                torch.save(best_state, args.save_model)
+        else:
+            waiting += 1
+        if args.early_stopping and waiting >= args.patience:
+            print("Early stopping", flush=True)
+            break
+    training_seconds = time.perf_counter() - start
+    model.load_state_dict(best_state)
+    clean_dataset = copy.copy(train_loader.dataset)
+    clean_dataset.transform = get_test_transforms(args.dataset)
+    clean_loader = make_loader(clean_dataset, args.batch_size, False, args.workers, args.seed)
+    selected_train = run_epoch(model, clean_loader, device, amp=args.amp, num_classes=num_classes)
+    selected_val = run_epoch(model, val_loader, device, amp=args.amp, num_classes=num_classes)
+    result = {"config": vars(args), "device": str(device),
+              "gpu": torch.cuda.get_device_name(0) if device.type == "cuda" else None,
+              "classes": classes, "profile": profiler.summary(), "history": history,
+              "best_epoch": best_epoch, "selection_metric": "validation loss",
+              "selected_train": selected_train, "selected_validation": selected_val,
+              "generalization_gap": selected_train["accuracy"] - selected_val["accuracy"],
+              "training_seconds": training_seconds,
+              "mean_epoch_seconds": sum(row["seconds"] for row in history) / len(history)}
+    result_path = Path(args.results_file)
+    result_path.parent.mkdir(parents=True, exist_ok=True)
+    result_path.write_text(json.dumps(result, indent=2))
     if args.plot_file:
-        model_display = f"{args.model} ({args.norm})" if args.model == "alexnet" else args.model
-        plot_training_curves(train_losses, val_losses, train_accs, val_accs,
-                             save_path=args.plot_file, model_name=model_display)
+        plot_training_curves([r["train"]["loss"] for r in history],
+                             [r["validation"]["loss"] for r in history],
+                             [r["train"]["accuracy"] for r in history],
+                             [r["validation"]["accuracy"] for r in history],
+                             save_path=args.plot_file, model_name=f"{args.model} {args.norm} {args.dataset}")
+    print(f"Selected epoch {best_epoch}; train {selected_train['accuracy']:.2f}%; "
+          f"validation {selected_val['accuracy']:.2f}%; Macro F1 {selected_val['macro_f1']:.2f}%; "
+          f"gap {result['generalization_gap']:.2f} pp", flush=True)
 
 
 if __name__ == "__main__":

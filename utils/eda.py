@@ -1,14 +1,3 @@
-"""
-ELEC 475: Lab 2 - Comprehensive Exploratory Data Analysis (EDA) Suite
-Pre-Lab Task 3 (Zero Coding Required — Complete & Ready to Run).
-Executes multi-pillar statistical profiling across CIFAR-10 and Tiny ImageNet-200:
-  1. Dataset Inventory & Storage Footprint
-  2. Class Balance, Frequency Profiling, Shannon Entropy, Gini Index & Imbalance Diagnostics
-  3. Channel-Wise Pixel Intensity Dynamics (RGB Means, Stds, Min/Max, Percentiles, Correlation, Histograms)
-  4. Data Integrity & Quality Checks (Corrupt Images, NaNs, Dead/Blank Frame Detection)
-  5. Stratified Visual Sample Grids
-  6. Problem-Dependent Metric Recommendations (Top-1 Accuracy vs Macro F1 vs Recall)
-"""
 import os
 import argparse
 import math
@@ -23,7 +12,7 @@ from .dataset import CIFAR10_CLASSES, download_and_extract_tiny_imagenet
 
 
 def get_dir_size_mb(path: str) -> float:
-    """Calculates disk storage size of a directory in Megabytes."""
+
     total_bytes = 0
     if not os.path.exists(path):
         return 0.0
@@ -38,9 +27,8 @@ def get_dir_size_mb(path: str) -> float:
 
 
 def run_eda(dataset_name: str = "cifar10", data_dir: str = "./data", out_dir: str = "./plots", sample_limit: int = None):
-    """
-    Executes comprehensive Exploratory Data Analysis on the chosen dataset ('cifar10', 'tiny_imagenet', or 'both').
-    """
+
+
     os.makedirs(out_dir, exist_ok=True)
     dname = dataset_name.lower()
 
@@ -57,7 +45,7 @@ def run_eda(dataset_name: str = "cifar10", data_dir: str = "./data", out_dir: st
         print(f"{'Feature / Metric':<32} | {'CIFAR-10':<25} | {'Tiny ImageNet-200':<25}")
         print("-" * 88)
         print(f"{'Number of Classes (C)':<32} | {res_cifar['num_classes']:<25} | {res_tiny['num_classes']:<25}")
-        print(f"{'Total Training Samples (N)':<32} | {res_cifar['total_samples']:,<25} | {res_tiny['total_samples']:,<25}")
+        print(f"{'Total Training Samples (N)':<32} | {res_cifar['total_samples']:<25,} | {res_tiny['total_samples']:<25,}")
         print(f"{'Samples Per Class':<32} | {res_cifar['samples_per_class']:<25} | {res_tiny['samples_per_class']:<25}")
         print(f"{'Imbalance Ratio (Max/Min)':<32} | {res_cifar['imbalance_ratio']:<25.2f} | {res_tiny['imbalance_ratio']:<25.2f}")
         print(f"{'Class Entropy Ratio (H/H_max)':<32} | {res_cifar['entropy_ratio']:<25.4f} | {res_tiny['entropy_ratio']:<25.4f}")
@@ -72,7 +60,7 @@ def run_eda(dataset_name: str = "cifar10", data_dir: str = "./data", out_dir: st
     print(f"ELEC 475: EXPLORATORY DATA ANALYSIS - DATASET: {dataset_name.upper()}")
     print("=" * 88)
 
-    # 1. Dataset Loading
+
     transform_raw = transforms.Compose([
         transforms.Resize((64, 64)),
         transforms.ToTensor()
@@ -107,7 +95,7 @@ def run_eda(dataset_name: str = "cifar10", data_dir: str = "./data", out_dir: st
     print(f"  Standardized Model Shape  : 3 x 64 x 64 (Tensor: float32, range [0.0, 1.0])")
     print(f"  Approximate Disk Storage  : {disk_mb:.1f} MB")
 
-    # 2. Pillar 1: Class Balance, Frequency Profiling & Imbalance Diagnostics
+
     print(f"\n[Pillar 1: Class Balance, Frequency Profiling & Imbalance Diagnostics]")
     class_counts = [int(np.sum(targets == i)) for i in range(num_classes)]
     min_count = min(class_counts)
@@ -117,7 +105,7 @@ def run_eda(dataset_name: str = "cifar10", data_dir: str = "./data", out_dir: st
     std_count = float(np.std(class_counts))
     imbalance_ratio = max_count / max(min_count, 1)
 
-    # Information-Theoretic Entropy: H = - sum(p_c * log2(p_c))
+
     probs = [c / total_samples for c in class_counts]
     shannon_entropy = -sum(p * math.log2(p) for p in probs if p > 0)
     max_entropy = math.log2(num_classes)
@@ -144,7 +132,7 @@ def run_eda(dataset_name: str = "cifar10", data_dir: str = "./data", out_dir: st
             print(f"    Class {idx:03d} ({classes[idx]:<14}): {count:>5} images ({pct:5.1f}%)")
         print(f"    ... [{num_classes - 10} additional classes with {mean_count:.0f} images each] ...")
 
-    # Categorization and Recommendation
+
     if imbalance_ratio <= 1.05:
         balance_status = "PERFECTLY BALANCED"
         recommendation = (
@@ -172,7 +160,7 @@ def run_eda(dataset_name: str = "cifar10", data_dir: str = "./data", out_dir: st
     print(f"  Dataset Balance Status    : {balance_status}")
     print(f"  Metric Recommendation     :\n  {recommendation}")
 
-    # Plot Class Distribution
+
     plt.figure(figsize=(10 if num_classes <= 20 else 14, 4))
     if num_classes <= 20:
         plt.bar(classes, class_counts, color='royalblue', edgecolor='black', alpha=0.85)
@@ -189,7 +177,7 @@ def run_eda(dataset_name: str = "cifar10", data_dir: str = "./data", out_dir: st
     plt.close()
     print(f"  --> Saved Class Distribution Plot to: {dist_plot_path}")
 
-    # 3. Pillar 2: Pixel Intensity Statistics & RGB Channel Dynamics
+
     print(f"\n[Pillar 2: Pixel Intensity Statistics & RGB Channel Dynamics]")
     print("  Computing exact dataset-wide RGB channel means, standard deviations, and dynamic range...")
 
@@ -202,11 +190,11 @@ def run_eda(dataset_name: str = "cifar10", data_dir: str = "./data", out_dir: st
     total_pixels = 0
     all_channel_pixels = [[], [], []]
 
-    # Sample subset for percentile & correlation computation
+
     max_eval_samples = min(total_samples, 2000 if sample_limit is None else sample_limit)
     collected_samples = 0
 
-    # Data Integrity Trackers
+
     corrupt_count = 0
     nan_inf_count = 0
     blank_image_count = 0
@@ -214,7 +202,7 @@ def run_eda(dataset_name: str = "cifar10", data_dir: str = "./data", out_dir: st
     extreme_bright_count = 0
 
     for imgs, _ in loader:
-        # Check NaNs / Infs
+
         if torch.isnan(imgs).any() or torch.isinf(imgs).any():
             nan_inf_count += imgs.size(0)
 
@@ -230,14 +218,14 @@ def run_eda(dataset_name: str = "cifar10", data_dir: str = "./data", out_dir: st
         if b_min < global_min: global_min = b_min
         if b_max > global_max: global_max = b_max
 
-        # Check blank / dead images via spatial variance
+
         per_img_var = imgs.var(dim=[1, 2, 3])
         per_img_mean = imgs.mean(dim=[1, 2, 3])
         blank_image_count += int((per_img_var < 1e-4).sum().item())
         extreme_dark_count += int((per_img_mean < 0.05).sum().item())
         extreme_bright_count += int((per_img_mean > 0.95).sum().item())
 
-        # Collect subset for histogram and inter-channel correlation
+
         if collected_samples < max_eval_samples:
             take = min(batch_size, max_eval_samples - collected_samples)
             for c in range(3):
@@ -251,7 +239,7 @@ def run_eda(dataset_name: str = "cifar10", data_dir: str = "./data", out_dir: st
     print(f"  Empirical Mean (R, G, B)  : [{mean_rgb[0]:.4f}, {mean_rgb[1]:.4f}, {mean_rgb[2]:.4f}]")
     print(f"  Empirical Std  (R, G, B)  : [{std_rgb[0]:.4f}, {std_rgb[1]:.4f}, {std_rgb[2]:.4f}]")
 
-    # Compute percentiles and Pearson correlation
+
     r_pix = np.concatenate(all_channel_pixels[0])
     g_pix = np.concatenate(all_channel_pixels[1])
     b_pix = np.concatenate(all_channel_pixels[2])
@@ -259,7 +247,7 @@ def run_eda(dataset_name: str = "cifar10", data_dir: str = "./data", out_dir: st
     p1, p25, p50, p75, p99 = np.percentile(r_pix, [1, 25, 50, 75, 99])
     print(f"  Red Channel Percentiles   : P1={p1:.3f}, P25={p25:.3f}, Median={p50:.3f}, P75={p75:.3f}, P99={p99:.3f}")
 
-    # Inter-channel correlation matrix
+
     pix_matrix = np.stack([r_pix, g_pix, b_pix], axis=0)
     corr_matrix = np.corrcoef(pix_matrix)
     print(f"  Inter-Channel Correlation Matrix:")
@@ -271,7 +259,7 @@ def run_eda(dataset_name: str = "cifar10", data_dir: str = "./data", out_dir: st
     print(f"      std=[{std_rgb[0]:.4f}, {std_rgb[1]:.4f}, {std_rgb[2]:.4f}]")
     print(f"  )")
 
-    # Plot Channel Histograms
+
     plt.figure(figsize=(9, 4))
     colors = ['crimson', 'forestgreen', 'royalblue']
     channel_labels = ['Red Channel', 'Green Channel', 'Blue Channel']
@@ -289,7 +277,7 @@ def run_eda(dataset_name: str = "cifar10", data_dir: str = "./data", out_dir: st
     plt.close()
     print(f"  --> Saved Channel Histograms to: {hist_plot_path}")
 
-    # 4. Pillar 3: Data Quality & Integrity Checks
+
     print(f"\n[Pillar 3: Data Integrity, Outlier & Quality Diagnostics]")
     print(f"  Corrupt File Exceptions   : {corrupt_count} (Passed)")
     print(f"  NaN / Inf Representation  : {nan_inf_count} (Passed)")
@@ -298,7 +286,7 @@ def run_eda(dataset_name: str = "cifar10", data_dir: str = "./data", out_dir: st
     print(f"  Extreme Bright Outliers   : {extreme_bright_count} (Images with Mean > 0.95)")
     print(f"  Integrity Status          : 100% CLEAN & VERIFIED FOR TRAINING")
 
-    # 5. Pillar 4: Visual Sample Grid
+
     print(f"\n[Pillar 4: Visual Inspection & Stratified Sample Grid]")
     rows, cols = 4, 8
     num_display = rows * cols
