@@ -1,88 +1,56 @@
-# ELEC 475: Lab 2 Starter Template
-## From LeNet-5 to AlexNet: An Architectural & Empirical Evolution
+# ELEC 475 Lab 2
 
-Welcome to ELEC 475 Lab 2! This repository contains the starter code and scaffolding for both your **In-Lab (2-hour milestone)** and **Post-Lab (due Oct 22)** assignments.
+Abresham Islam Talukder, 20381857. Individual submission.
 
-### Directory Structure
+This project compares base LeNet, modernized LeNet, AlexNet with no normalization, LRN and BatchNorm, augmented AlexNet, and torchvision AlexNet on CIFAR-10 and Tiny ImageNet-200.
 
-```text
-lab2_template/
-├── configs/
-│   └── config.py          # Centralized configuration dataclass (ExperimentConfig)
-├── models/
-│   ├── lenet.py           # TODO [In-Lab Step 2]: Base LeNet-5 implementation
-│   ├── lenet_modern.py    # TODO [In-Lab Step 4]: Modernized LeNet (ReLU + Overlapping MaxPool)
-│   ├── alexnet.py         # TODO [Post-Lab Step 1]: Full 5-stage AlexNet with LRN/BatchNorm
-│   └── zoo.py             # Pre-built PyTorch Model Zoo adapter (torchvision.models.alexnet)
-├── utils/
-│   ├── dataset.py         # Automated CIFAR-10 and Tiny ImageNet loaders
-│   ├── eda.py             # Exploratory Data Analysis tool (class distributions, RGB stats, imbalance ratio)
-│   ├── transforms.py      # TODO [Post-Lab Step 3]: PyTorch GPU data augmentation pipeline
-│   ├── metrics.py         # Loss, Top-1 accuracy, Macro/Micro F1, ConfusionMatrixTracker & EarlyStopping
-│   ├── seed.py            # Global deterministic seeding across Python, NumPy, PyTorch (CPU/CUDA)
-│   ├── visualization.py   # Training curve and ablation plotters
-│   └── profiler.py        # Timer (CUDA sync), ModelProfiler (FLOPs/MACs/Params)
-├── compare_models.py      # Multi-model complexity & FLOPs benchmarking CLI script
-├── demo_transforms.py     # Pre-Lab benchmark: PyTorch GPU Tensors vs OpenCV vs NumPy
-├── train.py               # Complete CLI training engine with Timer, ModelProfiler, Macro F1 & Early Stopping
-├── evaluate.py            # Checkpoint evaluation script with full classification report
-└── requirements.txt       # Python package dependencies (torch, torchvision, thop, torchinfo)
-```
+## Setup
 
----
-
-### Step-by-Step Execution Guide
-
-#### 1. Setup Environment
-```powershell
+```bash
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1   # Windows PowerShell (or source .venv/bin/activate on Linux/WSL/macOS)
-pip install -r requirements.txt
-```
-
-#### 2. Run Pre-Lab Exploratory Data Analysis & Verification
-```powershell
-# 1. Run Comprehensive Dual-Dataset Exploratory Data Analysis (EDA):
-python utils/eda.py --dataset both
-
-# 2. Run Automated Environment & Dataset Verification:
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python verify_lab.py
+python -m utils.eda --dataset both
 python prelab_verify.py
 ```
 
-#### 3. In-Lab Milestone (2 Hours)
-- Open `models/lenet.py` and implement the `TODO [IN-LAB STEP 2]` sections.
-- Verify architecture: `python -m models.lenet`
-- Train Base LeNet (real-time epoch timers and FLOPs logged):
-  ```powershell
-  python train.py --model lenet --dataset cifar10 --epochs 5 --save-model checkpoints/lenet_baseline.pth --plot-file plots/loss_lenet.png
-  ```
-- Open `models/lenet_modern.py` and implement the `TODO [IN-LAB STEP 4]` sections.
-- Verify architecture: `python -m models.lenet_modern`
-- Train Modernized LeNet:
-  ```powershell
-  python train.py --model lenet_modern --dataset cifar10 --epochs 5 --save-model checkpoints/lenet_modern.pth --plot-file plots/loss_lenet_modern.png
-  ```
-- Demonstrate results to a TA for **In-Lab Checkoff (3 Marks)**!
+The course manual specifies creating the virtual environment from Conda Python. The recorded experiments used an existing isolated Ubuntu system Python 3.14.4 environment. The exact installed versions are recorded in environment_versions.txt.
 
-#### 4. Post-Lab Milestones (Due Oct 22)
-- Open `models/alexnet.py` and implement the `TODO [POST-LAB STEP 1 & 2]` sections.
-- Run the normalization ablation study (using multi-seed reproducibility and early stopping):
-  ```powershell
-  python train.py --model alexnet --norm none --dataset cifar10 --epochs 15 --seed 42 --early-stopping --save-model checkpoints/alexnet_none.pth --plot-file plots/loss_none.png
-  python train.py --model alexnet --norm lrn --dataset cifar10 --epochs 15 --seed 42 --early-stopping --save-model checkpoints/alexnet_lrn.pth --plot-file plots/loss_lrn.png
-  python train.py --model alexnet --norm bn --dataset cifar10 --epochs 15 --seed 42 --early-stopping --save-model checkpoints/alexnet_bn.pth --plot-file plots/loss_bn.png
-  ```
-- Open `utils/transforms.py` and implement the `TODO [POST-LAB STEP 3]` data augmentations.
-- Train AlexNet with data augmentation and early stopping:
-  ```powershell
-  python train.py --model alexnet --norm bn --dataset cifar10 --epochs 15 --seed 42 --early-stopping --save-model checkpoints/alexnet_bn_aug.pth --plot-file plots/loss_aug.png
-  ```
-- Benchmark model complexity and FLOPs across all models:
-  ```powershell
-  python compare_models.py --dataset cifar10
-  ```
-- Train PyTorch Zoo AlexNet for comparison:
-  ```powershell
-  python train.py --model zoo_alexnet --dataset cifar10 --epochs 15 --seed 42 --early-stopping --save-model checkpoints/zoo_alexnet.pth
-  ```
-- Author your formal report per instructions in [`POSTLAB.md`](../POSTLAB.md) and submit to OnQ!
+## Experiments
+
+```bash
+python run_experiments.py
+python prepare_results.py
+python compare_models.py --dataset cifar10 --device cuda --output results/profiles_cifar10.json
+python compare_models.py --dataset tiny_imagenet --device cuda --output results/profiles_tiny_imagenet.json
+```
+
+The queue contains 54 runs: seven required configurations plus a 15-epoch unaugmented BatchNorm comparison on both datasets, each with seeds 42, 123 and 999, and two additional CIFAR-10 learning rates with the same seeds. LeNet runs for 5 epochs, normalization and zoo models for 10, and the matched augmentation comparison for 15. The main learning rate is 0.001, batch size is 128 and Adam weight decay is 0.0001. Training uses CUDA bfloat16 autocast with FP32 weights when --amp is enabled. Each checkpoint is selected by validation loss. The core queue uses fixed epoch budgets; --early-stopping and --patience are available for separate experiments.
+
+The queue skips runs whose result JSON already exists. Delete a chosen result JSON before rerunning that experiment. The commands.txt file contains every exact training command. Raw logs, complete epoch histories and summary tables are in logs/ and results/. Figures are in plots/.
+
+The Tiny ImageNet loader uses val/val_annotations.txt and val/images, with labels aligned to the training class order. It does not evaluate on the training directory. CIFAR-10 uses its official test split as validation, following the lab template, so those reported numbers are validation benchmarks rather than untouched test estimates.
+
+## Checkpoint evaluation
+
+```bash
+python evaluate.py --model alexnet --norm bn --dataset cifar10 --checkpoint checkpoints/alexnet_bn.pth
+```
+
+Evaluation through evaluate.py uses FP32; the training history JSON records the bfloat16-autocast evaluation used for checkpoint selection. Small prediction differences between the two precision settings are possible.
+
+## Files
+
+- models/ contains the four architectures.
+- utils/ contains datasets, transforms, metrics, seeding, timing and plotting.
+- train.py trains one experiment and writes its history and selected-checkpoint metrics.
+- run_experiments.py runs the full study.
+- verify_lab.py checks model shapes, gradients, Tiny ImageNet split separation and the metric implementation.
+- inspect_architectures.py records layer shapes, receptive fields and parameter breakdowns.
+- prepare_results.py generates the aggregate tables and comparative figures.
+- compare_models.py profiles parameters and approximate operation counts and measures inference latency.
+
+Dataset downloads, virtual environments and checkpoint files are excluded from Git. Required checkpoints are supplied in the submission archive. All run checkpoints remain in the local Ubuntu working directory. Re-running the commands recreates them.
+
+FLOPs use twice the THOP operation count. LRN and some element-wise operations are not fully represented in that estimate. Inference timing uses synchronized FP32 forward passes; training timing includes loading, preprocessing and validation. Augmentation uses torchvision in CPU data-loader workers before transfer to CUDA.
